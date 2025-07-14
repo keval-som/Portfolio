@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Keval Sompura - Portfolio
 
-## Getting Started
+A modern portfolio website built with Next.js and Tailwind CSS, showcasing my experience as a Software Engineer and graduate student at Stevens Institute of Technology.
 
-First, run the development server:
+## 🚀 Live Demo
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+[Portfolio Link](https://kevalsompura.vercel.app/)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ Features
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- Modern, responsive design
+- Interactive sections (Hero, About, Experience, Projects, Skills, Contact)
+- Professional content showcasing work experience and projects
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Tech Stack
 
-## Learn More
+- **Framework**: Next.js 14
+- **Styling**: Tailwind CSS
+- **Language**: JavaScript
+- **Deployment**: Vercel
 
-To learn more about Next.js, take a look at the following resources:
+## 📞 Contact
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Email**: sompurakeval@gmail.com
+- **LinkedIn**: [linkedin.com/in/kevalsom](https://linkedin.com/in/kevalsom)
+- **GitHub**: [github.com/keval-som](https://github.com/keval-som)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
