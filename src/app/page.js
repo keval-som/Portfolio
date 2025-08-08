@@ -1,718 +1,630 @@
 "use client";
 
-import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+
+function IconFolder(props) {
+  return (
+    <svg
+      width={22}
+      height={22}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      {...props}
+    >
+      <path
+        d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+    </svg>
+  );
+}
+
+function IconGitHub(props) {
+  return (
+    <svg
+      width={20}
+      height={20}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M12 .5a12 12 0 0 0-3.79 23.4c.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61-.55-1.41-1.35-1.79-1.35-1.79-1.1-.76.08-.74.08-.74 1.22.09 1.86 1.25 1.86 1.25 1.08 1.85 2.84 1.31 3.54 1 .11-.78.42-1.31.76-1.61-2.66-.3-5.46-1.33-5.46-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23a11.44 11.44 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.67 1.65.25 2.87.12 3.17.77.84 1.24 1.91 1.24 3.22 0 4.61-2.8 5.62-5.47 5.92.43.37.81 1.1.81 2.23v3.3c0 .32.21.7.82.58A12 12 0 0 0 12 .5z" />
+    </svg>
+  );
+}
+
+function IconExternal(props) {
+  return (
+    <svg
+      width={20}
+      height={20}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M14 3h7v7" />
+      <path d="M10 14 21 3" />
+      <path d="M21 14v7h-7" />
+      <path d="M3 10V3h7" />
+    </svg>
+  );
+}
+
+function IconMail(props) {
+  return (
+    <svg
+      width={20}
+      height={20}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M4 6h16v12H4z" />
+      <path d="m22 6-10 7L2 6" />
+    </svg>
+  );
+}
+
+function IconLinkedIn(props) {
+  return (
+    <svg
+      width={20}
+      height={20}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V24h-4zM8 8h3.8v2.2h.05C12.66 8.9 14.4 8 16.5 8 21 8 22 10.7 22 15.3V24h-4v-7.6c0-1.8 0-4.1-2.5-4.1s-2.9 2-2.9 4V24H8z" />
+    </svg>
+  );
+}
+
+function IconCopy(props) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      aria-hidden="true"
+      {...props}
+    >
+      <rect x="9" y="9" width="13" height="13" rx="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </svg>
+  );
+}
 
 export default function Home() {
-  const heroRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: heroRef });
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  const [showHeader, setShowHeader] = useState(false);
+  const [typedText, setTypedText] = useState("");
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const phrases = useMemo(
+    () => [
+      "Software Engineer & Problem Solver",
+      "I build reliable backend services",
+      "I craft delightful web experiences",
+    ],
+    []
+  );
 
-  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  // Header appear-on-scroll
+  useEffect(() => {
+    const onScroll = () => setShowHeader(window.scrollY > 96);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: [0.33, 1, 0.68, 1] },
-    },
-  };
+  // Typing effect
+  useEffect(() => {
+    const current = phrases[phraseIndex % phrases.length];
+    const typingSpeed = isDeleting ? 40 : 85;
+    const timeout = setTimeout(
+      () => {
+        const next = isDeleting
+          ? current.slice(0, typedText.length - 1)
+          : current.slice(0, typedText.length + 1);
+        setTypedText(next);
+        if (!isDeleting && next === current) {
+          setTimeout(() => setIsDeleting(true), 900);
+        } else if (isDeleting && next === "") {
+          setIsDeleting(false);
+          setPhraseIndex((i) => i + 1);
+        }
+      },
+      typedText === "" && !isDeleting ? 250 : typingSpeed
+    );
+    return () => clearTimeout(timeout);
+  }, [typedText, isDeleting, phraseIndex, phrases]);
 
-  const cardVariants = {
-    hover: { y: -10, transition: { duration: 0.3, ease: [0.33, 1, 0.68, 1] } },
-  };
+  // Intersection fade-in
+  useEffect(() => {
+    const elements = document.querySelectorAll("[data-animate]");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate-fadeUp");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
-  const containerVariants = {
-    visible: { transition: { staggerChildren: 0.1 } },
+  const resumeUrl =
+    "https://1drv.ms/b/c/3a622e73a08a1366/EWEAChdr2dJOgHiJ_N_0FUwB5yxfSbXDbAfMOKHmuuZkGA?e=Xi0MTE";
+  const email = "sompurakeval@gmail.com";
+  const [copied, setCopied] = useState(false);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    } catch {
+      // ignore
+    }
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white font-sans">
-      {/* Minimal Navigation */}
-      <motion.nav className="fixed top-0 w-full bg-white/90 dark:bg-black/90 backdrop-blur-md z-50 border-b border-gray-200 dark:border-gray-800 py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-2xl font-bold"
-          >
-            Keval Sompura
-          </motion.div>
-          <div className="flex space-x-8 text-sm font-medium">
-            {["About", "Experience", "Projects", "Skills", "Contact"].map(
-              (item) => (
-                <motion.a
-                  key={item}
-                  href={`#${item.toLowerCase()}`}
-                  whileHover={{ scale: 1.05 }}
-                  className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-                >
-                  {item}
-                </motion.a>
-              )
-            )}
+    <div className="min-h-screen font-sans bg-[color:var(--background)] text-[color:var(--foreground)]">
+      {/* Fixed Header (appears after scroll) */}
+      <header
+        className={`fixed top-0 inset-x-0 z-40 transition-all duration-300 ${
+          showHeader
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 -translate-y-3 pointer-events-none"
+        }`}
+        aria-hidden={!showHeader}
+      >
+        <nav className="mx-auto max-w-6xl px-4 py-3 rounded-b-xl backdrop-blur-sm bg-[rgb(15_37_71_/_0.6)] border border-[var(--border)]">
+          <div className="flex items-center justify-between gap-6">
+            <a href="#top" className="font-mono text-sm text-[var(--muted)]">
+              keval@portfolio:~
+            </a>
+            <ul className="hidden md:flex items-center gap-6 text-sm">
+              {[
+                { href: "#about", label: "About" },
+                { href: "#experience", label: "Experience" },
+                { href: "#projects", label: "Projects" },
+                { href: "#contact", label: "Contact" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className="text-[var(--muted)] hover:text-[var(--accent)] transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <a
+              href={resumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border border-[var(--accent)] text-[var(--accent)] px-3 py-1.5 rounded-md text-sm hover:bg-[rgb(100_255_218_/_0.1)] transition-colors"
+            >
+              Resume
+            </a>
           </div>
-        </div>
-      </motion.nav>
+        </nav>
+      </header>
 
-      {/* Hero Section */}
-      <section
-        ref={heroRef}
-        className="relative min-h-screen flex flex-col items-center justify-center text-center px-4"
-      >
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1] }}
-          className="w-32 h-32 mb-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center shadow-lg"
-        >
-          <span className="text-4xl font-bold text-gray-800 dark:text-gray-200">
-            KS
-          </span>
-        </motion.div>
-        <motion.h1
-          className="text-7xl font-bold mb-4 leading-none"
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1] }}
-        >
-          Hi, I&apos;m Keval Sompura
-        </motion.h1>
-        <motion.p
-          className="text-2xl text-gray-600 dark:text-gray-400 mb-4"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-        >
-          Software Engineer | FinTech Specialist
-        </motion.p>
-        <motion.p
-          className="text-xl italic text-gray-500 dark:text-gray-400 mb-6 max-w-2xl"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-        >
-          {"Turning coffee into code, one microservice at a time ☕"}
-        </motion.p>
-        <motion.p
-          className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-3xl"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-        >
-          Graduate student at Stevens Institute of Technology pursuing M.S. in
-          Computer Science. Passionate about backend engineering, microservices
-          architecture, and building scalable FinTech solutions.
-        </motion.p>
-        <motion.div
-          className="flex justify-center gap-4"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-        >
-          <a
-            href="#experience"
-            className="bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-full font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition"
-          >
-            View Experience
-          </a>
-          <a
-            href="https://1drv.ms/b/c/3a622e73a08a1366/EWEAChdr2dJOgHiJ_N_0FUwB5yxfSbXDbAfMOKHmuuZkGA?e=Xi0MTE"
-            className="border border-gray-300 px-6 py-3 rounded-full font-medium hover:bg-gray-100 dark:hover:bg-gray-900 transition"
-          >
-            Download Resume
-          </a>
-          <a
-            href="#contact"
-            className="border border-gray-300 px-6 py-3 rounded-full font-medium hover:bg-gray-100 dark:hover:bg-gray-900 transition"
-          >
-            Get In Touch
-          </a>
-        </motion.div>
-      </section>
+      <main id="top">
+        {/* Hero */}
+        <section className="mx-auto max-w-6xl px-4 pt-28 md:pt-40 pb-16 md:pb-28">
+          <p className="font-mono text-[var(--accent)] mb-3">
+            {"// "}Hi, my name is
+          </p>
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
+            Keval Sompura
+          </h1>
+          <h2 className="text-xl md:text-2xl text-[var(--muted)] min-h-8">
+            <span className="font-mono">{typedText}</span>
+            <span className="font-mono text-[var(--accent)]">|</span>
+          </h2>
+          <p className="mt-6 max-w-2xl text-[var(--muted)]" data-animate>
+            Software engineer focused on backend systems, microservices, and
+            building resilient FinTech products. I value clarity, performance,
+            and a great developer experience.
+          </p>
+          <div className="mt-10" data-animate>
+            <a
+              href="#projects"
+              className="inline-block bg-[var(--accent)] text-[#0a192f] font-medium px-5 py-3 rounded-md hover:opacity-90 focus-visible:outline-2"
+            >
+              View My Work
+            </a>
+          </div>
+        </section>
 
-      {/* About Section */}
-      <section
-        id="about"
-        className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900"
-      >
-        <div className="max-w-7xl mx-auto">
-          <motion.h2
-            variants={sectionVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-5xl font-bold text-center mb-16"
-          >
-            About Me
-          </motion.h2>
-          <div className="grid md:grid-cols-2 gap-12">
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
-              <motion.p
-                variants={sectionVariants}
-                className="text-lg text-gray-600 dark:text-gray-300 mb-6"
-              >
-                I&apos;m a Software Engineer with 2+ years of experience in
-                software development, currently pursuing my M.S. in Computer
-                Science at Stevens Institute of Technology with a GPA of 3.78/4.
-                I specialize in backend development, microservices architecture,
-                and building scalable financial technology solutions.
-              </motion.p>
-              <motion.p
-                variants={sectionVariants}
-                className="text-lg text-gray-600 dark:text-gray-300 mb-6"
-              >
-                Previously, I worked as a Senior Software Engineer at Lentra,
-                where I designed and implemented middlewares using Java and
-                Spring Boot, reducing API response times by 25% and achieving
-                100% test success rate. I&apos;m passionate about system design,
-                cloud infrastructure, and creating robust, high-performance
-                applications.
-              </motion.p>
-              <motion.p
-                variants={sectionVariants}
-                className="text-lg text-gray-600 dark:text-gray-300"
-              >
-                When I&apos;m not coding, you&apos;ll find me exploring hiking
-                trails, discovering new places to eat, or diving into the latest
-                tech podcasts.
-              </motion.p>
-            </motion.div>
-            <motion.div
-              variants={sectionVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md"
-            >
-              <h3 className="text-2xl font-bold mb-4">Quick Facts</h3>
-              <ul className="space-y-3 text-gray-600 dark:text-gray-300">
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-gray-500 rounded-full mr-3"></span>
-                  2 years of software development experience
+        {/* About */}
+        <section id="about" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
+          <h3 className="font-mono text-sm text-[var(--accent)]" data-animate>
+            <span className="mr-2">01.</span> About Me
+          </h3>
+          <div className="mt-6 grid md:grid-cols-2 gap-10 items-start">
+            <div className="space-y-4 text-[var(--muted)]" data-animate>
+              <p>
+                I&apos;m a software engineer with experience designing and
+                scaling backend services, building robust APIs, and shipping
+                delightful user experiences. My philosophy: keep things simple,
+                measure impact, and automate the boring stuff.
+              </p>
+              <p>
+                Recent focus areas include microservices, observability,
+                performance tuning, and cloud-native infrastructure.
+              </p>
+            </div>
+            <div className="panel p-6" data-animate>
+              <div className="grid sm:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-mono text-sm mb-3 text-[var(--accent)]">
+                    Languages
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {["Java", "Python", "JavaScript", "TypeScript", "SQL"].map(
+                      (t) => (
+                        <span key={t} className="pill">
+                          {t}
+                        </span>
+                      )
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-mono text-sm mb-3 text-[var(--accent)]">
+                    Frameworks
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      "Spring Boot",
+                      "React",
+                      "Node.js",
+                      "Next.js",
+                      "Flask",
+                    ].map((t) => (
+                      <span key={t} className="pill">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-mono text-sm mb-3 text-[var(--accent)]">
+                    Tools
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {["Git", "Docker", "Maven", "Jira", "CI/CD"].map((t) => (
+                      <span key={t} className="pill">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-mono text-sm mb-3 text-[var(--accent)]">
+                    Databases & Cloud
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {["MongoDB", "PostgreSQL", "AWS", "GCP"].map((t) => (
+                      <span key={t} className="pill">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Experience */}
+        <section
+          id="experience"
+          className="mx-auto max-w-6xl px-4 py-16 md:py-24"
+        >
+          <h3 className="font-mono text-sm text-[var(--accent)]" data-animate>
+            <span className="mr-2">02.</span> Experience
+          </h3>
+          <ol className="mt-6 relative border-l border-[var(--border)] ml-2 pl-6 space-y-10">
+            <li className="relative" data-animate>
+              <span
+                className="absolute -left-[9px] top-1.5 h-2.5 w-2.5 rounded-full bg-[var(--accent)]"
+                aria-hidden="true"
+              />
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <h4 className="text-lg font-semibold">
+                  Senior Software Engineer ·
+                  <a
+                    href="https://www.lentra.ai/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-1 underline decoration-[var(--accent)] underline-offset-4 hover:text-[var(--accent)]"
+                  >
+                    Lentra
+                  </a>
+                </h4>
+                <time className="font-mono text-xs text-[var(--muted)]">
+                  May 2022 — Nov 2023
+                </time>
+              </div>
+              <ul className="mt-3 list-disc pl-5 text-[var(--muted)] space-y-2">
+                <li>
+                  Reduced API latency by 25% by designing high-throughput Spring
+                  Boot middleware.
                 </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-gray-500 rounded-full mr-3"></span>
-                  Senior Software Engineer at Lentra (FinTech)
+                <li>
+                  Improved test pass rate from 65% → 100% and coverage from 46%
+                  → 85% by revamping JUnit suites.
                 </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-gray-500 rounded-full mr-3"></span>
-                  M.S. Computer Science at Stevens Institute
-                </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-gray-500 rounded-full mr-3"></span>
-                  Based in New York City
+                <li>
+                  Automated loan status reports, saving ~4 hours/week of manual
+                  effort.
                 </li>
               </ul>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Experience Section */}
-      <section id="experience" className="py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <motion.h2
-            variants={sectionVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-5xl font-bold text-center mb-16"
-          >
-            Work Experience
-          </motion.h2>
-          <div className="relative">
-            <div className="absolute left-1/2 w-0.5 h-full bg-gray-200 dark:bg-gray-700 transform -translate-x-1/2"></div>
-            {/* Lentra */}
-            <motion.div
-              variants={sectionVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="mb-12 text-left md:text-right pr-4 md:pr-0"
-            >
-              <div className="inline-block bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md w-full md:w-1/2">
-                <h3 className="text-2xl font-bold mb-2">
-                  Senior Software Engineer
-                </h3>
-                <p className="text-gray-500 mb-4">
-                  Lentra • May 2022 - November 2023
-                </p>
-                <ul className="list-disc pl-5 text-gray-600 dark:text-gray-300">
-                  <li>
-                    Designed middlewares with Java/Spring Boot, reducing
-                    response times by 25%
-                  </li>
-                  <li>
-                    Integrated analyzers with Python, cutting loan processing by
-                    2 days
-                  </li>
-                  <li>
-                    Revitalized unit test case infrastructure using JUnit,
-                    addressing legacy errors and introducing 40+ new test cases,
-                    elevating success rate from 65% to 100% and code coverage
-                    from 46% to 85%
-                  </li>
-                  <li>
-                    Created JavaScript-based solution for daily loan application
-                    status reports with automated FTP uploads via CRON job,
-                    saving 4 hours of manual effort weekly
-                  </li>
-                  <li>
-                    Earned &apos;The Spot Award&apos; for exceptional
-                    contributions to client success in Q2 2023
-                  </li>
-                </ul>
-              </div>
-            </motion.div>
-            {/* Blitz Jobs */}
-            <motion.div
-              variants={sectionVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="mb-12 text-right md:text-left pl-4 md:pl-0"
-            >
-              <div className="inline-block bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md w-full md:w-1/2">
-                <h3 className="text-2xl font-bold mb-2">
-                  Android Development Intern
-                </h3>
-                <p className="text-gray-500 mb-4">
-                  Blitz Jobs • May 2021 - June 2021
-                </p>
-                <ul className="list-disc pl-5 text-gray-600 dark:text-gray-300">
-                  <li>
-                    Led design and development of user-friendly Android app to
-                    digitize rooftop solar process, increasing sales partner
-                    engagement by 30%
-                  </li>
-                  <li>
-                    Contributed to 10% increase in sales through improved
-                    efficiency and strengthened client interactions
-                  </li>
-                  <li>
-                    Introduced analytics features to provide actionable insights
-                    into partner performance and customer preferences
-                  </li>
-                </ul>
-              </div>
-            </motion.div>
-            {/* Krux Works */}
-            <motion.div
-              variants={sectionVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="mb-12 text-left md:text-right pr-4 md:pr-0"
-            >
-              <div className="inline-block bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md w-full md:w-1/2">
-                <h3 className="text-2xl font-bold mb-2">
-                  Web Development Intern
-                </h3>
-                <p className="text-gray-500 mb-4">
-                  Krux Works • September 2020 - October 2020
-                </p>
-                <ul className="list-disc pl-5 text-gray-600 dark:text-gray-300">
-                  <li>
-                    Engineered comprehensive web platform with dashboards to
-                    improve user access and streamline information management
-                  </li>
-                  <li>
-                    Revitalized community interaction by introducing WordPress
-                    forum, attracting 500 users in first week with 75 new posts
-                    daily
-                  </li>
-                  <li>
-                    Improved mobile usability by over 30% through responsive
-                    design solutions, enhancing user experience across devices
-                  </li>
-                </ul>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Projects Section */}
-      <section
-        id="projects"
-        className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900"
-      >
-        <div className="max-w-7xl mx-auto">
-          <motion.h2
-            variants={sectionVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-5xl font-bold text-center mb-16"
-          >
-            Featured Projects
-          </motion.h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* StudentBridge Project */}
-            <motion.div
-              variants={cardVariants}
-              whileHover="hover"
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden border border-gray-200 dark:border-gray-700"
-            >
-              <div className="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                <span className="text-white text-2xl font-bold">
-                  StudentBridge
-                </span>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
-                  StudentBridge - Academic Resource Platform
-                </h3>
-                <p className="text-slate-600 dark:text-slate-300 mb-4">
-                  A comprehensive web application connecting students with
-                  resources, mentors, and opportunities to enhance their
-                  academic journey. Features user authentication, resource
-                  sharing, and discussion forums.
-                </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <span className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded text-xs">
-                    React
-                  </span>
-                  <span className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded text-xs">
-                    Node.js
-                  </span>
-                  <span className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded text-xs">
-                    MongoDB
-                  </span>
-                  <span className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded text-xs">
-                    Docker
-                  </span>
-                </div>
-                <div className="flex gap-3">
+            </li>
+            <li className="relative" data-animate>
+              <span
+                className="absolute -left-[9px] top-1.5 h-2.5 w-2.5 rounded-full bg-[var(--accent)]"
+                aria-hidden="true"
+              />
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <h4 className="text-lg font-semibold">
+                  Android Development Intern ·
                   <a
-                    href="https://github.com/keval-som/StudentBridge"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium"
+                    href="#"
+                    className="ml-1 underline decoration-[var(--accent)] underline-offset-4 hover:text-[var(--accent)]"
                   >
-                    GitHub
+                    Blitz Jobs
                   </a>
-                </div>
+                </h4>
+                <time className="font-mono text-xs text-[var(--muted)]">
+                  May 2021 — Jun 2021
+                </time>
               </div>
-            </motion.div>
-
-            {/* Voice Commerce Project */}
-            <motion.div
-              variants={cardVariants}
-              whileHover="hover"
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden border border-gray-200 dark:border-gray-700"
-            >
-              <div className="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                <span className="text-white text-2xl font-bold">
-                  Voice Commerce
-                </span>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
-                  Voice-Enabled E-commerce Platform
-                </h3>
-                <p className="text-slate-600 dark:text-slate-300 mb-4">
-                  A voice-enabled e-commerce platform for street vendors using
-                  speech recognition. Allows vendors to add products by speaking
-                  in their local language with multilingual support.
-                </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <span className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded text-xs">
-                    Python
-                  </span>
-                  <span className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded text-xs">
-                    Flask
-                  </span>
-                  <span className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded text-xs">
-                    Google Cloud APIs
-                  </span>
-                  <span className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded text-xs">
-                    OAuth2
-                  </span>
-                </div>
-                <div className="flex gap-3">
+              <ul className="mt-3 list-disc pl-5 text-[var(--muted)] space-y-2">
+                <li>
+                  Built Android app to digitize rooftop solar workflows; +30%
+                  partner engagement.
+                </li>
+                <li>
+                  Shipped analytics features to inform partner performance and
+                  customer trends.
+                </li>
+              </ul>
+            </li>
+            <li className="relative" data-animate>
+              <span
+                className="absolute -left-[9px] top-1.5 h-2.5 w-2.5 rounded-full bg-[var(--accent)]"
+                aria-hidden="true"
+              />
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <h4 className="text-lg font-semibold">
+                  Web Development Intern ·
                   <a
-                    href="https://github.com/keval-som/voice-commerce"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium"
+                    href="#"
+                    className="ml-1 underline decoration-[var(--accent)] underline-offset-4 hover:text-[var(--accent)]"
                   >
-                    GitHub
+                    Krux Works
                   </a>
-                </div>
+                </h4>
+                <time className="font-mono text-xs text-[var(--muted)]">
+                  Sep 2020 — Oct 2020
+                </time>
               </div>
-            </motion.div>
+              <ul className="mt-3 list-disc pl-5 text-[var(--muted)] space-y-2">
+                <li>
+                  Delivered web platform with dashboards to streamline
+                  information access.
+                </li>
+                <li>
+                  Launched community forum; 500 users in week one, ~75
+                  posts/day.
+                </li>
+              </ul>
+            </li>
+          </ol>
+        </section>
 
-            {/* Ride-Share Project */}
-            <motion.div
-              variants={cardVariants}
-              whileHover="hover"
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden border border-gray-200 dark:border-gray-700"
-            >
-              <div className="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                <span className="text-white text-2xl font-bold">
-                  Ride-Share
-                </span>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
-                  Ride-Sharing Application
-                </h3>
-                <p className="text-slate-600 dark:text-slate-300 mb-4">
-                  A ride-sharing platform built with modern web technologies.
-                  Features user authentication, ride booking, and real-time
-                  location tracking.
-                </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <span className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded text-xs">
-                    JavaScript
-                  </span>
-                  <span className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded text-xs">
-                    Handlebars
-                  </span>
-                  <span className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded text-xs">
-                    CSS
-                  </span>
+        {/* Projects */}
+        <section
+          id="projects"
+          className="mx-auto max-w-6xl px-4 py-16 md:py-24"
+        >
+          <h3 className="font-mono text-sm text-[var(--accent)]" data-animate>
+            <span className="mr-2">03.</span> Projects
+          </h3>
+          <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                title: "StudentBridge",
+                desc: "Academic resource platform connecting students with mentors and shared resources.",
+                tech: ["React", "Node.js", "MongoDB", "Docker"],
+                github: "https://github.com/keval-som/StudentBridge",
+                demo: undefined,
+              },
+              {
+                title: "Voice Commerce",
+                desc: "Voice-enabled e‑commerce for street vendors with multilingual speech support.",
+                tech: ["Python", "Flask", "Google Cloud APIs", "OAuth2"],
+                github: "https://github.com/keval-som/voice-commerce",
+                demo: undefined,
+              },
+              {
+                title: "Ride-Share",
+                desc: "Ride‑sharing app featuring auth, booking, and live location tracking.",
+                tech: ["JavaScript", "Handlebars", "CSS"],
+                github: "https://github.com/keval-som/Ride-Share",
+                demo: undefined,
+              },
+            ].map((p) => (
+              <article
+                key={p.title}
+                className="panel p-5 hover:-translate-y-1 transition-transform"
+                data-animate
+              >
+                <div className="flex items-center justify-between mb-4 text-[var(--accent)]">
+                  <IconFolder />
+                  <div className="flex items-center gap-3 text-[var(--foreground)]">
+                    {p.github && (
+                      <a
+                        href={p.github}
+                        aria-label={`${p.title} GitHub`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-[var(--accent)]"
+                        title="GitHub"
+                      >
+                        <IconGitHub />
+                      </a>
+                    )}
+                    {p.demo && (
+                      <a
+                        href={p.demo}
+                        aria-label={`${p.title} Live Demo`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-[var(--accent)]"
+                        title="Open live demo"
+                      >
+                        <IconExternal />
+                      </a>
+                    )}
+                  </div>
                 </div>
-                <div className="flex gap-3">
-                  <a
-                    href="https://github.com/keval-som/Ride-Share"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium"
-                  >
-                    GitHub
-                  </a>
+                <h4 className="text-lg font-semibold mb-2">{p.title}</h4>
+                <p className="text-[var(--muted)] mb-4">{p.desc}</p>
+                <div className="flex flex-wrap gap-2">
+                  {p.tech.map((t) => (
+                    <span key={t} className="pill">
+                      {t}
+                    </span>
+                  ))}
                 </div>
-              </div>
-            </motion.div>
+              </article>
+            ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Skills Section */}
-      <section
-        id="skills"
-        className="py-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900"
-      >
-        <div className="max-w-7xl mx-auto">
-          <motion.h2
-            variants={sectionVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-5xl font-bold text-center mb-16"
-          >
-            Skills & Technologies
-          </motion.h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Programming Languages */}
-            <motion.div
-              variants={cardVariants}
-              whileHover="hover"
-              className="text-center"
+        {/* Contact */}
+        <section id="contact" className="mx-auto max-w-4xl px-4 py-16 md:py-24">
+          <div className="text-center">
+            <h3 className="font-mono text-sm text-[var(--accent)]" data-animate>
+              <span className="mr-2">04.</span> What&apos;s Next?
+            </h3>
+            <h4 className="mt-4 text-3xl md:text-4xl font-bold" data-animate>
+              Get In Touch
+            </h4>
+            <p
+              className="mt-4 max-w-2xl mx-auto text-[var(--foreground)] leading-relaxed"
+              data-animate
             >
-              <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center">
-                <span className="text-2xl">💻</span>
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
-                Languages
-              </h3>
-              <div className="space-y-2">
-                <div className="text-slate-600 dark:text-slate-300">Java</div>
-                <div className="text-slate-600 dark:text-slate-300">Python</div>
-                <div className="text-slate-600 dark:text-slate-300">
-                  JavaScript
-                </div>
-                <div className="text-slate-600 dark:text-slate-300">C/C++</div>
-              </div>
-            </motion.div>
-
-            {/* Frameworks */}
-            <motion.div
-              variants={cardVariants}
-              whileHover="hover"
-              className="text-center"
-            >
-              <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center">
-                <span className="text-2xl">⚙️</span>
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
-                Frameworks
-              </h3>
-              <div className="space-y-2">
-                <div className="text-slate-600 dark:text-slate-300">
-                  Spring Boot
-                </div>
-                <div className="text-slate-600 dark:text-slate-300">
-                  React.js
-                </div>
-                <div className="text-slate-600 dark:text-slate-300">
-                  Node.js
-                </div>
-                <div className="text-slate-600 dark:text-slate-300">Flask</div>
-              </div>
-            </motion.div>
-
-            {/* Database & Cloud */}
-            <motion.div
-              variants={cardVariants}
-              whileHover="hover"
-              className="text-center"
-            >
-              <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center">
-                <span className="text-2xl">🗄️</span>
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
-                Database & Cloud
-              </h3>
-              <div className="space-y-2">
-                <div className="text-slate-600 dark:text-slate-300">
-                  MongoDB
-                </div>
-                <div className="text-slate-600 dark:text-slate-300">SQL</div>
-                <div className="text-slate-600 dark:text-slate-300">AWS</div>
-                <div className="text-slate-600 dark:text-slate-300">
-                  Google Cloud
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Tools & DevOps */}
-            <motion.div
-              variants={cardVariants}
-              whileHover="hover"
-              className="text-center"
-            >
-              <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center">
-                <span className="text-2xl">🛠️</span>
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
-                Tools & DevOps
-              </h3>
-              <div className="space-y-2">
-                <div className="text-slate-600 dark:text-slate-300">
-                  Git & Bitbucket
-                </div>
-                <div className="text-slate-600 dark:text-slate-300">Docker</div>
-                <div className="text-slate-600 dark:text-slate-300">Maven</div>
-                <div className="text-slate-600 dark:text-slate-300">Jira</div>
-              </div>
-            </motion.div>
+              I&apos;m currently open to new opportunities and exciting
+              collaborations. Whether you&apos;re looking to discuss a project,
+              have questions, or just want to connect, I&apos;d love to hear
+              from you.
+            </p>
           </div>
-        </div>
-      </section>
 
-      {/* Contact Section */}
-      <section
-        id="contact"
-        className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900"
-      >
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.h2
-            variants={sectionVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-5xl font-bold text-slate-900 dark:text-white mb-8"
-          >
-            Let&apos;s Work Together
-          </motion.h2>
-          <p className="text-lg text-slate-600 dark:text-slate-300 mb-12 max-w-2xl mx-auto">
-            I&apos;m always interested in new opportunities and exciting
-            projects. Whether you have a question or just want to say hi, feel
-            free to reach out!
-          </p>
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <motion.div
-              variants={cardVariants}
-              whileHover="hover"
-              className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700"
-            >
-              <div className="w-12 h-12 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-                <span className="text-xl">📧</span>
+          <div className="mt-12 space-y-8" data-animate>
+            {/* Primary Contact Card */}
+            <div className="panel p-8 text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-[var(--accent)]/10 rounded-xl mb-6">
+                <IconMail className="w-8 h-8 text-[var(--accent)]" />
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
-                Email
-              </h3>
-              <p className="text-slate-600 dark:text-slate-300">
-                <a
-                  href="mailto:sompurakeval@gmail.com"
-                  className="hover:underline"
-                >
-                  sompurakeval@gmail.com
-                </a>
+              <h5 className="text-lg font-semibold mb-2">Drop me a line</h5>
+              <p className="text-[var(--muted)] mb-6">
+                The best way to reach me is via email. I typically respond
+                within 24 hours.
               </p>
-            </motion.div>
-            <motion.div
-              variants={cardVariants}
-              whileHover="hover"
-              className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700"
-            >
-              <div className="w-12 h-12 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-                <span className="text-xl">💼</span>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                <a
+                  href={`mailto:${email}?subject=Hello from your portfolio`}
+                  className="inline-flex items-center gap-3 bg-[var(--accent)] text-[#0a192f] px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity"
+                >
+                  <IconMail className="w-5 h-5" />
+                  Send Email
+                </a>
+                <div className="flex items-center gap-2 text-sm text-[var(--muted)]">
+                  <code className="bg-[var(--border)] px-2 py-1 rounded text-xs">
+                    {email}
+                  </code>
+                  <button
+                    type="button"
+                    onClick={copyEmail}
+                    className="p-1 hover:text-[var(--accent)] transition-colors"
+                    title="Copy email"
+                    aria-live="polite"
+                  >
+                    <IconCopy className="w-4 h-4" />
+                    <span className="sr-only">
+                      {copied ? "Copied!" : "Copy email"}
+                    </span>
+                  </button>
+                  {copied && (
+                    <span className="text-[var(--accent)] text-xs">
+                      Copied!
+                    </span>
+                  )}
+                </div>
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
-                LinkedIn
-              </h3>
-              <p className="text-slate-600 dark:text-slate-300">
+            </div>
+
+            {/* Social Links */}
+            <div className="text-center">
+              <p className="text-[var(--muted)] mb-6">Or connect with me on</p>
+              <div className="flex justify-center gap-6">
                 <a
                   href="https://www.linkedin.com/in/kevalsom"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:underline"
+                  className="flex flex-col items-center gap-2 p-4 rounded-lg hover:bg-[var(--border)]/30 transition-colors group"
                 >
-                  linkedin.com/in/kevalsom
+                  <IconLinkedIn className="w-8 h-8 text-[#0A66C2] group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-medium">LinkedIn</span>
+                  <span className="text-xs text-[var(--muted)]">
+                    Professional network
+                  </span>
                 </a>
-              </p>
-            </motion.div>
-            <motion.div
-              variants={cardVariants}
-              whileHover="hover"
-              className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700"
-            >
-              <div className="w-12 h-12 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-                <span className="text-xl">🐙</span>
-              </div>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
-                GitHub
-              </h3>
-              <p className="text-slate-600 dark:text-slate-300">
                 <a
                   href="https://github.com/keval-som"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:underline"
+                  className="flex flex-col items-center gap-2 p-4 rounded-lg hover:bg-[var(--border)]/30 transition-colors group"
                 >
-                  github.com/keval-som
+                  <IconGitHub className="w-8 h-8 group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-medium">GitHub</span>
+                  <span className="text-xs text-[var(--muted)]">
+                    Code repositories
+                  </span>
                 </a>
-              </p>
-            </motion.div>
+              </div>
+            </div>
           </div>
-          <motion.a
-            variants={cardVariants}
-            whileHover="hover"
-            whileTap="tap"
-            href="mailto:sompurakeval@gmail.com"
-            className="bg-black dark:bg-white text-white dark:text-black px-8 py-3 rounded-lg font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors inline-block"
-          >
-            Send Me a Message
-          </motion.a>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      {/* Footer */}
-      <footer className="py-8 text-center text-gray-500 dark:text-gray-400 text-sm">
-        © 2025 Keval Sompura
+      <footer className="py-8 text-center text-[var(--muted)] text-xs">
+        © {new Date().getFullYear()} Keval Sompura
       </footer>
     </div>
   );
