@@ -1,4 +1,4 @@
-import { Inter, Fira_Code } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -7,22 +7,22 @@ const inter = Inter({
   display: "swap",
 });
 
-const firaCode = Fira_Code({
+const jetbrainsMono = JetBrains_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
   display: "swap",
 });
 
 export const metadata = {
-  title: "Keval Sompura - Software Engineer",
+  title: "Keval Sompura — Software Engineer | Fintech & Backend",
   description:
-    "Software Engineer | Ex - Lentra | FinTech | Java, Spring Boot, Microservices | Graduate Student at Stevens Institute of Technology",
+    "Software Engineer specializing in high-throughput fintech systems, distributed backend architecture, and microservices. Ex-Lentra. M.S. Computer Science, Stevens Institute of Technology.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.variable} ${firaCode.variable} antialiased`}>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}>
         {children}
       </body>
     </html>

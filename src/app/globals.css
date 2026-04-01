@@ -1,14 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  /* Terminal / Editor theme */
-  --background: #0a192f; /* navy variant */
-  --foreground: #e6f1ff; /* light slate */
+  --background: #060f1e;
+  --foreground: #e6f1ff;
   --muted: #8892b0;
-  --panel: #0f2547; /* slightly lighter panel */
-  --accent: #64ffda; /* default accent, can be swapped */
+  --panel: #0b1d3a;
+  --accent: #64ffda;
   --link: var(--accent);
-  --border: #233554;
+  --border: #1a2e4a;
 }
 
 @theme inline {
@@ -17,8 +16,6 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
-
-/* Force dark theme */
 
 body {
   background: var(--background);
@@ -34,40 +31,49 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Focus styles for accessibility */
 :focus-visible {
   outline: 2px dashed var(--accent);
   outline-offset: 3px;
 }
 
-/* Utility pills */
+/* ── Pill / Tag ──────────────────────────────────────────────────────────── */
 .pill {
   display: inline-block;
   border: 1px solid var(--border);
   background: rgba(100, 255, 218, 0.06);
   color: var(--foreground);
-  padding: 6px 10px;
+  padding: 5px 10px;
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 11.5px;
   line-height: 1;
+  transition: border-color 150ms, color 150ms, background 150ms;
 }
 
-/* Card / panel */
+.pill:hover {
+  border-color: rgba(100, 255, 218, 0.5);
+  color: var(--accent);
+  background: rgba(100, 255, 218, 0.1);
+}
+
+/* ── Card / Panel (Glassmorphism) ────────────────────────────────────────── */
 .panel {
   background: linear-gradient(
-    180deg,
-    rgba(18, 43, 87, 0.6),
-    rgba(13, 31, 63, 0.6)
+    145deg,
+    rgba(15, 37, 71, 0.55),
+    rgba(10, 25, 50, 0.55)
   );
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(100, 255, 218, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(100, 255, 218, 0.05);
 }
 
-/* Subtle entrance animations */
+/* ── Animations ──────────────────────────────────────────────────────────── */
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
@@ -77,4 +83,103 @@ html {
 
 .animate-fadeUp {
   animation: fadeUp 600ms cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+
+/* Fintech Production Pulse */
+@keyframes fintechPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55);
+  }
+  60% {
+    box-shadow: 0 0 0 5px rgba(34, 197, 94, 0);
+  }
+}
+
+.fintech-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  display: inline-block;
+  flex-shrink: 0;
+  animation: fintechPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Live Activity Dot */
+@keyframes livePulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
+  flex-shrink: 0;
+  animation: livePulse 1.6s ease-in-out infinite;
+}
+
+/* ── Holographic Gradient Text ───────────────────────────────────────────── */
+@keyframes holographic {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.holographic-text {
+  background: linear-gradient(
+    135deg,
+    #64ffda 0%,
+    #7b61ff 30%,
+    #00d4ff 60%,
+    #64ffda 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: holographic 6s ease infinite;
+}
+
+/* ── Skill Tooltip ───────────────────────────────────────────────────────── */
+.skill-tip {
+  position: relative;
+  display: inline-flex;
+}
+
+.skill-tip-text {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  min-width: 190px;
+  max-width: 220px;
+  background: rgba(8, 20, 42, 0.97);
+  border: 1px solid rgba(100, 255, 218, 0.18);
+  border-radius: 8px;
+  padding: 8px 11px;
+  font-size: 11px;
+  color: #8892b0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 180ms ease, transform 180ms ease, visibility 180ms;
+  pointer-events: none;
+  z-index: 30;
+  text-align: center;
+  white-space: normal;
+  line-height: 1.5;
+}
+
+.skill-tip:hover .skill-tip-text {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
 }
