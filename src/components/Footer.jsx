@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="border-t border-[color:var(--border)] mt-16">
       <div className="mx-auto max-w-6xl px-5 md:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[12.5px] text-[color:var(--muted)]">
         <p className="mono">
-          © {new Date().getFullYear()} {profile.name}. Built with Next.js &amp; care.
+          © 2025 {profile.name}. Built with Next.js &amp; care.
         </p>
         <div className="flex items-center gap-2">
           <FooterIcon href={`mailto:${profile.email}`} label="Email">

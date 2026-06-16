@@ -5,22 +5,16 @@
 export const profile = {
   name: "Keval Sompura",
   role: "Software Engineer",
-  specialty: "Fintech & Backend",
-  tagline: "Building high-throughput lending systems and secure data architectures.",
-  location: "Hoboken, NJ",
+  headline: "I build backend systems that don't break under pressure.",
+  subheadline:
+    "Full-stack engineer with production fintech experience — distributed systems, async architectures, and end-to-end feature ownership.",
+  location: "Jersey City, NJ",
   email: "sompurakeval@gmail.com",
-  resumeUrl:
-    "https://1drv.ms/b/c/3a622e73a08a1366/IQDPOiU3BMBJSIh1Jq8TawT1AfvaOIrltG2c29ygEQ0l3B0?e=AZIwKu",
+  resumeUrl: "#", // TODO: UPDATE RESUME URL
   socials: {
     github: "https://github.com/keval-som",
     linkedin: "https://www.linkedin.com/in/kevalsom",
   },
-  typedPhrases: [
-    "Building high-throughput lending systems",
-    "Designing secure data architectures",
-    "Crafting resilient backend services",
-    "Automating credit decision pipelines",
-  ],
 };
 
 export const navItems = [
@@ -32,16 +26,18 @@ export const navItems = [
 ];
 
 export const aboutParagraphs = [
-  "Software engineer with 1.5+ years of production fintech experience at Lentra, engineering distributed credit decision pipelines on AWS that serve concurrent financial transactions at scale.",
-  "My work spans high-throughput microservices, API design, and backend systems where sub-100ms latency and data integrity are production requirements — not aspirational goals.",
-  "Currently completing an M.S. in Computer Science at Stevens Institute of Technology, with coursework in security, distributed systems, and network infrastructure.",
+  "I'm a software engineer with 1.5 years of production experience at Lentra, a fintech lending platform serving 50+ banks across India.",
+  "My work has ranged from optimizing microservices under real financial load to redesigning async architectures that took API failure rates to near-zero — and owning features end-to-end from client requirements through UAT and production deployment.",
+  "I recently completed my M.S. in Computer Science at Stevens Institute of Technology, where I went deeper on distributed systems, security, and network infrastructure.",
+  "I work best at the intersection of backend reliability and product ownership — teams where I can own a problem fully, not just implement tickets.",
+  "Based in Jersey City, NJ. Open to remote and relocation.",
 ];
 
 export const highlights = [
   { value: "25%", label: "API latency reduction" },
-  { value: "85%", label: "Test coverage (from 46%)" },
-  { value: "2d", label: "Faster loan processing" },
-  { value: "20%", label: "Fewer deploy failures" },
+  { value: "85%", label: "Test coverage achieved (from 46%)" },
+  { value: "2 days", label: "Loan processing time cut" },
+  { value: "~0%", label: "API failure rate after async redesign" },
 ];
 
 export const experiences = [
@@ -54,11 +50,11 @@ export const experiences = [
     live: true,
     tag: "Fintech SaaS · Distributed Systems · AWS Production",
     bullets: [
-      "Optimized Java Spring Boot microservices within a distributed AWS architecture, reducing API latency by 25% across high-volume financial transaction workflows handling concurrent production traffic.",
-      "Integrated Python-based analytical services into credit decision pipelines, automating data ingestion into the rule engine and reducing loan processing time by 2 days while improving system throughput.",
-      "Strengthened production reliability by redesigning the JUnit testing framework, increasing coverage from 46% to 85% and preventing regression failures in critical backend services.",
-      "Implemented CI/CD pipelines using Jenkins and Git for two client-facing systems, using AWS CloudWatch to guarantee fault-tolerant releases and reduce deployment failures by 20%.",
-      "Built a fault-tolerant internal Node.js service automating financial reporting pipelines with event-driven scheduling and secure FTP transfers, saving 4+ hours of manual work weekly.",
+      "Shipped end-to-end financial platform features for a major private-sector bank processing 750+ weekly applications, collaborating across product, QA, and client teams from requirements through production deployment in Q1 2023.",
+      "Optimized Java Spring Boot microservices across a distributed financial platform, reducing API latency by 25% on high-volume transaction processing pipelines deployed on AWS ECS with CloudWatch observability.",
+      "Redesigned JUnit testing infrastructure across critical backend services, increasing test coverage from 46% to 85% and reducing regression issues in production loan processing workflows.",
+      "Built an async callback system to handle external service timeouts, reducing API failure rate to near-zero for large payload workflows and eliminating client-facing wait times.",
+      "Automated data ingestion into the eligibility engine, triggering real-time decisioning workflows and reducing end-to-end processing time by 2 days.",
     ],
   },
   {
@@ -69,9 +65,9 @@ export const experiences = [
     period: "May 2021 — Jun 2021",
     tag: "Mobile · Java · Firebase",
     bullets: [
-      "Boosted sales partner engagement by 30% by designing and launching a rooftop-solar Android app using Java, XML, and Firebase Realtime Database.",
-      "Leveraged REST APIs to connect the mobile application with the company's CRM backend, enabling real-time synchronization of lead and client data and driving a 10% increase in sales.",
-      "Enabled in-app analytics dashboards using Firebase Analytics, reducing manual KPI reporting time for the sales team by 40% and enabling immediate identification of underperforming sales territories.",
+      "Launched an Android application in Java and Firebase for rooftop-solar sales partners, driving a 30% increase in partner engagement and a 10% lift in sales conversion.",
+      "Designed RESTful API integrations connecting the mobile app to CRM backend systems, enabling real-time lead synchronization and streamlining data ingestion across the sales workflow.",
+      "Instrumented Firebase Analytics dashboards, reducing manual KPI reporting effort by 40% and surfacing real-time visibility into underperforming sales territories.",
     ],
   },
 ];
@@ -80,7 +76,7 @@ export const projects = [
   {
     title: "Shadow Proxy",
     featured: true,
-    desc: "High-concurrency PostgreSQL DB proxy built with Java 21 (Virtual Threads) and Netty, handling 10k+ connections. Transparent read-write splitting via JSQLParser AST, dual-layer Caffeine/Redis cache, and a sliding-window circuit breaker with async RabbitMQ audit telemetry.",
+    desc: "A stateless PostgreSQL proxy built in Java 21 with Netty NIO — implementing transparent read-write splitting, a two-level cache (Caffeine L1 + Redis L2), per-node circuit breakers with a sliding-window state machine, and async RabbitMQ audit telemetry. Zero application changes required.",
     flow: "Client → Netty Decoder → L1/L2 Cache → AST Router → Circuit Breaker → Primary/Replica → Wire Encoder → Client",
     tech: ["Java 21", "Netty", "PostgreSQL", "Redis", "RabbitMQ", "Docker"],
     github: "https://github.com/keval-som/Shadow-Proxy",
@@ -89,122 +85,86 @@ export const projects = [
   {
     title: "Advisor AI",
     featured: false,
-    desc: "Scalable backend integrating LLM inference with structured academic datasets for real-time personalized course recommendations. Containerized on GCP Cloud Run with horizontal scaling, request validation, and rate limiting for low-latency, fault-tolerant, abuse-resistant AI pipelines.",
-    flow: "Client → Rate Limiter → LLM Router → Dataset Join → Serializer → Cache → Client",
-    tech: ["Python", "Node.js", "Docker", "MongoDB", "GCP", "AWS"],
+    desc: "Full-stack academic advising platform — React frontend, FastAPI backend, MongoDB, deployed to Google Cloud Run via Docker. Integrated a LangGraph-based RAG pipeline and fine-tuned LLaMA-2-7B model for AI-assisted advising. Built real-time SSE streaming, Firebase Auth, and the full API layer connecting AI inference to the frontend.",
+    flow: "Client → React UI → FastAPI Backend → MongoDB → AI Inference Layer → SSE Stream → Client",
+    tech: ["Python", "FastAPI", "React", "Docker", "MongoDB", "GCP", "LangGraph"],
     github: "https://github.com/keval-som/AdvisorAi",
     demo: null,
   },
   {
-    title: "Ride-Share",
-    desc: "Production-grade Node.js backend with RESTful APIs for ride booking, creation, and user auth — handling concurrent requests efficiently. Location-based ride matching with geospatial indexing improved search performance by 30% and cut query latency.",
+    title: "Ride Share",
+    desc: "Full-stack ride-sharing platform built with Node.js — real-time driver-rider chat, booking workflows, geospatial ride-matching with optimized MongoDB indexing (30% search performance improvement), email notifications, and a post-ride review system. Containerized with Docker.",
     flow: "User Location → Geo-Index → Distance Scoring → Driver Match → Booking → Real-time Sync",
-    tech: ["Node.js", "AWS", "Docker", "MongoDB"],
+    tech: ["Node.js", "MongoDB", "Docker"],
     github: "https://github.com/keval-som/Ride-Share",
-    demo: null,
-  },
-  {
-    title: "F1 Data Insights",
-    desc: "Real-time telemetry pipeline processing high-velocity F1 race data with sub-second ingestion. ETL architecture with automated anomaly detection and end-to-end data integrity validation across concurrent multi-stream data.",
-    flow: "F1 API → Stream Ingestor → Anomaly Detector → ETL → PostgreSQL → Query Layer",
-    tech: ["Java", "Python", "PostgreSQL", "Docker"],
-    github: null,
-    demo: null,
-  },
-  {
-    title: "Voice Commerce",
-    desc: "Low-latency Flask REST API processing voice-based inventory commands with real-time CRUD on a NoSQL datastore. Containerized with structured error handling for scalable, fault-tolerant cloud infrastructure.",
-    flow: "Voice → Speech Parser → Classifier → CRUD → NoSQL → Confirmation",
-    tech: ["Python", "Flask", "Docker", "GCP"],
-    github: "https://github.com/keval-som/voice-commerce",
     demo: null,
   },
 ];
 
-// Skills — structured per resume with category icons + primary/supporting highlights.
-// `primary: true` lifts the most-used tags visually.
-// `size` = desktop col-span in a 12-col grid. Mobile handled separately.
 export const skillGroups = [
   {
     key: "languages",
     title: "Languages",
     icon: "code",
-    size: 5,
+    size: 6,
     items: [
       { label: "Java", primary: true },
       { label: "Python", primary: true },
+      { label: "JavaScript", primary: true },
       { label: "TypeScript", primary: true },
-      { label: "JavaScript" },
       { label: "SQL", primary: true },
       { label: "GraphQL" },
-      { label: "C++" },
-      { label: "C" },
-      { label: "HTML" },
     ],
   },
   {
     key: "frameworks",
-    title: "Frameworks & Libraries",
+    title: "Frameworks",
     icon: "layers",
-    size: 7,
+    size: 6,
     items: [
       { label: "Spring Boot", primary: true },
-      { label: "Node.js", primary: true },
       { label: "React.js", primary: true },
-      { label: "Netty" },
+      { label: "Node.js", primary: true },
+      { label: "FastAPI", primary: true },
       { label: "Hibernate" },
-      { label: "JSQLParser" },
-      { label: "Caffeine" },
-      { label: "HikariCP" },
-      { label: "Mockito" },
       { label: "Bootstrap" },
     ],
   },
   {
     key: "ai",
-    title: "AI & Agentic Coding",
+    title: "AI & Integrations",
     icon: "brain",
-    size: 7,
+    size: 6,
     items: [
       { label: "LangGraph", primary: true },
       { label: "LangChain", primary: true },
       { label: "RAG Pipelines", primary: true },
       { label: "ChromaDB" },
-      { label: "Vector Embeddings" },
       { label: "OpenAI API" },
-      { label: "Gemini API" },
-      { label: "Anthropic / Claude" },
-      { label: "MCP" },
-      { label: "Prompt Engineering" },
-      { label: "QLoRA Fine-Tuning" },
-      { label: "Cursor / Copilot" },
     ],
   },
   {
     key: "cloud",
     title: "Cloud & DevOps",
     icon: "cloud",
-    size: 5,
+    size: 6,
     items: [
       { label: "AWS", primary: true },
       { label: "ECS" },
       { label: "S3" },
-      { label: "IAM" },
-      { label: "VPC" },
       { label: "CloudWatch" },
       { label: "GCP", primary: true },
       { label: "Docker", primary: true },
       { label: "Kubernetes" },
-      { label: "GitHub Actions" },
       { label: "Jenkins" },
-      { label: "RabbitMQ" },
+      { label: "GitHub Actions" },
     ],
   },
   {
     key: "databases",
     title: "Databases",
     icon: "database",
-    size: 5,
+    size: 6,
     items: [
       { label: "PostgreSQL", primary: true },
       { label: "Redis", primary: true },
@@ -214,20 +174,17 @@ export const skillGroups = [
     ],
   },
   {
-    key: "tools",
-    title: "Tools & Other",
+    key: "concepts",
+    title: "Concepts",
     icon: "wrench",
-    size: 7,
+    size: 6,
     items: [
-      { label: "Git", primary: true },
-      { label: "Maven" },
-      { label: "Postman" },
-      { label: "Jira" },
-      { label: "Bitbucket" },
-      { label: "VS Code" },
-      { label: "Android Studio" },
-      { label: "Figma" },
-      { label: "Flutter" },
+      { label: "Distributed Systems", primary: true },
+      { label: "System Design", primary: true },
+      { label: "Event-Driven Architecture", primary: true },
+      { label: "Microservices" },
+      { label: "Observability" },
+      { label: "REST APIs" },
     ],
   },
 ];
@@ -235,22 +192,22 @@ export const skillGroups = [
 export const activity = [
   {
     type: "building",
-    text: "Shadow Proxy — a transparent PostgreSQL proxy in Java 21 with Netty, virtual threads, two-level caching, and RabbitMQ audit telemetry.",
+    text: "Shadow Proxy — stateless PostgreSQL proxy in Java 21 with Netty, virtual threads, and RabbitMQ audit telemetry.",
     time: "Now",
   },
   {
     type: "studying",
-    text: "AWS Solutions Architect (Associate) — VPC design, IAM policies, multi-region fault tolerance.",
+    text: "AWS Solutions Architect (Associate) — VPC design, IAM, multi-region fault tolerance.",
     time: "This week",
   },
   {
     type: "reading",
-    text: "Designing Data-Intensive Applications — replication, consensus, and stream processing internals.",
+    text: "Designing Data-Intensive Applications — replication, consensus, stream processing.",
     time: "This month",
   },
   {
     type: "exploring",
-    text: "Apache Kafka streams for event-driven financial transaction processing at scale.",
+    text: "Apache Kafka for event-driven financial data pipelines.",
     time: "Ongoing",
   },
 ];

@@ -2,7 +2,7 @@
 
 import Section from "@/components/Section";
 import Reveal from "@/components/Reveal";
-import { aboutParagraphs, profile } from "@/lib/data";
+import { aboutParagraphs } from "@/lib/data";
 
 export default function About() {
   return (
@@ -25,12 +25,6 @@ export default function About() {
               </p>
             </Reveal>
           ))}
-          <Reveal delay={0.2}>
-            <p className="pt-2 mono text-[13px] text-[color:var(--muted-2)]">
-              <span className="text-[color:var(--accent)]">→</span> Based in {profile.location}.
-              Open to relocation.
-            </p>
-          </Reveal>
         </div>
 
         {/* Portrait / visual */}
@@ -97,17 +91,6 @@ function Avatar() {
         d="M38 175 C 55 140, 75 128, 100 128 C 125 128, 145 140, 162 175"
         fill="url(#g1)"
       />
-      <text
-        x="100"
-        y="195"
-        textAnchor="middle"
-        fontFamily="var(--font-mono-var), monospace"
-        fontSize="7"
-        fill="var(--muted)"
-        letterSpacing="3"
-      >
-        KS · FINTECH · BACKEND
-      </text>
     </svg>
   );
 }

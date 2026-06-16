@@ -16,33 +16,35 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata = {
-  metadataBase: new URL("https://kevalsompura.dev"),
-  title: "Keval Sompura — Software Engineer | Fintech & Backend",
+  metadataBase: new URL("https://kevalsompura.vercel.app"),
+  title: "Keval Sompura — Software Engineer",
   description:
-    "Software Engineer specializing in high-throughput fintech systems, distributed backend architecture, and microservices. Ex-Lentra. M.S. Computer Science, Stevens Institute of Technology.",
+    "Keval Sompura — Software Engineer specializing in distributed systems, full-stack development, and production backend engineering. M.S. Computer Science, Stevens Institute of Technology.",
   keywords: [
     "Keval Sompura",
     "Software Engineer",
-    "Fintech",
-    "Backend",
+    "Full Stack",
     "Distributed Systems",
     "Java",
     "Spring Boot",
     "AWS",
-    "Lentra",
+    "React",
+    "FastAPI",
+    "Fintech",
+    "Backend Engineer",
   ],
   authors: [{ name: "Keval Sompura" }],
   openGraph: {
     title: "Keval Sompura — Software Engineer",
     description:
-      "Building high-throughput lending systems and secure data architectures.",
+      "Full-stack engineer with production fintech experience in distributed systems, async architectures, and end-to-end feature delivery.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Keval Sompura — Software Engineer",
     description:
-      "Building high-throughput lending systems and secure data architectures.",
+      "Full-stack engineer with production fintech experience in distributed systems, async architectures, and end-to-end feature delivery.",
   },
 };
 
