@@ -79,15 +79,13 @@ export default function Navbar() {
                 <li key={item.href}>
                   <a
                     href={item.href}
-                    className={`relative px-3 py-2 text-[13px] rounded-md transition-colors ${
+                    className={`relative px-3 py-2 mono text-[12.5px] rounded-md transition-colors ${
                       isActive
                         ? "text-[color:var(--accent)]"
                         : "text-[color:var(--muted)] hover:text-[color:var(--fg)]"
                     }`}
                   >
-                    <span className="mono text-[10px] mr-1.5 text-[color:var(--accent)] opacity-70">
-                      {item.n}.
-                    </span>
+                    <span className="opacity-50">/</span>
                     {item.label}
                     {isActive && (
                       <motion.span
@@ -153,10 +151,10 @@ export default function Navbar() {
                   <a
                     href={item.href}
                     onClick={() => setOpen(false)}
-                    className="flex items-baseline gap-3 px-4 py-5 border-b border-[color:var(--border)] hover:text-[color:var(--accent)]"
+                    className="flex items-baseline px-4 py-5 border-b border-[color:var(--border)] mono text-lg hover:text-[color:var(--accent)]"
                   >
-                    <span className="mono text-xs text-[color:var(--accent)]">{item.n}.</span>
-                    <span className="text-lg">{item.label}</span>
+                    <span className="text-[color:var(--accent)] opacity-70">/</span>
+                    <span>{item.label}</span>
                   </a>
                 </motion.li>
               ))}

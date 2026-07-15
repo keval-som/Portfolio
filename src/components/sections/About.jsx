@@ -6,7 +6,7 @@ import { aboutParagraphs } from "@/lib/data";
 
 export default function About() {
   return (
-    <Section id="about" number="01" label="About Me" title="A brief introduction.">
+    <Section id="about" title="A brief introduction.">
       <div className="grid md:grid-cols-5 gap-10 md:gap-14 items-start">
         {/* Bio */}
         <div className="md:col-span-3 space-y-5 text-[color:var(--muted)] leading-relaxed text-[15px]">
@@ -27,17 +27,9 @@ export default function About() {
           ))}
         </div>
 
-        {/* Portrait / visual */}
+        {/* Service status card — the engineer, as a unit file */}
         <Reveal delay={0.12} className="md:col-span-2">
-          <div className="relative group max-w-[280px] mx-auto md:mx-0">
-            <div className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-[color:var(--accent)] via-[color:var(--accent-2)] to-[color:var(--accent-3)] opacity-20 blur-xl group-hover:opacity-40 transition-opacity duration-500" />
-            <div className="relative panel p-1 overflow-hidden aspect-square">
-              <div className="w-full h-full rounded-[11px] bg-[color:var(--bg-elev)] flex items-center justify-center overflow-hidden">
-                <Avatar />
-              </div>
-              <div className="absolute inset-0 rounded-[12px] ring-1 ring-inset ring-[color:rgba(var(--accent-rgb),0.12)] pointer-events-none" />
-            </div>
-          </div>
+          <ServiceCard />
         </Reveal>
       </div>
     </Section>
@@ -62,35 +54,76 @@ function SplitWithLink({ text, word, href }) {
   );
 }
 
-// SVG-based abstract avatar so we don't require an image asset.
-function Avatar() {
+function Line({ label, children }) {
   return (
-    <svg
-      viewBox="0 0 200 200"
-      className="w-full h-full"
-      role="img"
-      aria-label="Abstract portrait illustration"
-    >
-      <defs>
-        <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="var(--accent-2)" stopOpacity="0.9" />
-        </linearGradient>
-        <linearGradient id="g2" x1="0" x2="1" y1="1" y2="0">
-          <stop offset="0%" stopColor="var(--accent-3)" stopOpacity="0.35" />
-          <stop offset="100%" stopColor="var(--accent)" stopOpacity="0.15" />
-        </linearGradient>
-        <pattern id="dots" width="10" height="10" patternUnits="userSpaceOnUse">
-          <circle cx="1" cy="1" r="0.7" fill="var(--accent)" opacity="0.22" />
-        </pattern>
-      </defs>
-      <rect width="200" height="200" fill="url(#dots)" />
-      <circle cx="100" cy="110" r="78" fill="url(#g2)" />
-      <circle cx="100" cy="90" r="28" fill="url(#g1)" />
-      <path
-        d="M38 175 C 55 140, 75 128, 100 128 C 125 128, 145 140, 162 175"
-        fill="url(#g1)"
-      />
-    </svg>
+    <div className="flex gap-2">
+      <span className="text-[color:var(--muted-2)] w-[72px] text-right shrink-0">{label}:</span>
+      <span className="text-[color:var(--muted)]">{children}</span>
+    </div>
+  );
+}
+
+function ServiceCard() {
+  return (
+    <div className="relative group">
+      <div className="absolute -inset-2 rounded-2xl bg-[color:rgba(var(--accent-rgb),0.14)] opacity-40 blur-2xl group-hover:opacity-70 transition-opacity duration-500 pointer-events-none" />
+      <div className="relative panel overflow-hidden">
+        {/* title bar */}
+        <div className="flex items-center gap-1.5 px-4 py-3 border-b border-[color:var(--border)]">
+          <span className="h-2.5 w-2.5 rounded-full bg-[color:var(--danger)] opacity-70" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[color:var(--accent)] opacity-70" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[color:var(--success)] opacity-70" />
+          <span className="mono text-[10px] text-[color:var(--muted-2)] ml-2">
+            keval@jersey-city:~
+          </span>
+        </div>
+
+        {/* body */}
+        <div className="p-4 md:p-5 mono text-[11px] md:text-[11.5px] leading-[1.9]">
+          <div>
+            <span className="text-[color:var(--accent)]">$</span>{" "}
+            <span className="text-[color:var(--fg)]">systemctl status keval</span>
+          </div>
+
+          <div className="mt-1.5 flex items-center gap-2">
+            <span className="dot-live !w-2 !h-2" aria-hidden="true" />
+            <span className="text-[color:var(--fg-strong)]">keval.service</span>
+            <span className="text-[color:var(--muted-2)]">— software engineer</span>
+          </div>
+
+          <div className="mt-1 space-y-0.5">
+            <Line label="Active">
+              <span className="text-[color:var(--success)]">active (open to work)</span>
+            </Line>
+            <Line label="Loaded">jersey-city.nj · remote-ok</Line>
+            <Line label="Docs">m.s. cs — stevens institute</Line>
+            <Line label="Uptime">1.5y fintech production</Line>
+          </div>
+
+          <div className="mt-2 space-y-0.5">
+            <div className="flex gap-2">
+              <span className="text-[color:var(--muted-2)] w-[72px] text-right shrink-0">
+                CGroup:
+              </span>
+              <span className="text-[color:var(--muted)]">/keval.service</span>
+            </div>
+            <div className="pl-[88px] text-[color:var(--muted)]">
+              ├─ backend · <span className="text-[color:var(--accent)]">java · spring</span>
+            </div>
+            <div className="pl-[88px] text-[color:var(--muted)]">
+              ├─ cloud · <span className="text-[color:var(--accent)]">aws · docker</span>
+            </div>
+            <div className="pl-[88px] text-[color:var(--muted)]">
+              └─ ai · <span className="text-[color:var(--accent)]">langgraph · rag</span>
+            </div>
+          </div>
+
+          <div className="mt-2.5">
+            <span className="text-[color:var(--accent)]">$</span>{" "}
+            <span className="cursor-blink" aria-hidden="true" />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -10,19 +10,20 @@ export const profile = {
     "Full-stack engineer with production fintech experience — distributed systems, async architectures, and end-to-end feature ownership.",
   location: "Jersey City, NJ",
   email: "sompurakeval@gmail.com",
-  resumeUrl: "#", // TODO: UPDATE RESUME URL
+  resumeUrl: "/Keval_Resume.pdf",
   socials: {
     github: "https://github.com/keval-som",
     linkedin: "https://www.linkedin.com/in/kevalsom",
   },
 };
 
+// Rendered as filesystem paths (/about, /experience…) — ties to the ~/keval wordmark.
 export const navItems = [
-  { href: "#about", label: "About", n: "01" },
-  { href: "#experience", label: "Experience", n: "02" },
-  { href: "#projects", label: "Projects", n: "03" },
-  { href: "#skills", label: "Skills", n: "04" },
-  { href: "#contact", label: "Contact", n: "05" },
+  { href: "#about", label: "about" },
+  { href: "#experience", label: "experience" },
+  { href: "#projects", label: "projects" },
+  { href: "#skills", label: "skills" },
+  { href: "#contact", label: "contact" },
 ];
 
 export const aboutParagraphs = [
@@ -60,7 +61,7 @@ export const experiences = [
   {
     title: "Software Development Intern",
     company: "Blitz Jobs",
-    companyUrl: "#",
+    companyUrl: null,
     location: "Mumbai, India",
     period: "May 2021 — Jun 2021",
     tag: "Mobile · Java · Firebase",
@@ -74,27 +75,31 @@ export const experiences = [
 
 export const projects = [
   {
+    slug: "shadow-proxy",
     title: "Shadow Proxy",
     featured: true,
+    tagline: "Database infrastructure · zero app changes",
     desc: "A stateless PostgreSQL proxy built in Java 21 with Netty NIO — implementing transparent read-write splitting, a two-level cache (Caffeine L1 + Redis L2), per-node circuit breakers with a sliding-window state machine, and async RabbitMQ audit telemetry. Zero application changes required.",
-    flow: "Client → Netty Decoder → L1/L2 Cache → AST Router → Circuit Breaker → Primary/Replica → Wire Encoder → Client",
     tech: ["Java 21", "Netty", "PostgreSQL", "Redis", "RabbitMQ", "Docker"],
     github: "https://github.com/keval-som/Shadow-Proxy",
     demo: null,
   },
   {
+    slug: "advisor-ai",
     title: "Advisor AI",
     featured: false,
+    tagline: "Full-stack RAG platform on GCP",
     desc: "Full-stack academic advising platform — React frontend, FastAPI backend, MongoDB, deployed to Google Cloud Run via Docker. Integrated a LangGraph-based RAG pipeline and fine-tuned LLaMA-2-7B model for AI-assisted advising. Built real-time SSE streaming, Firebase Auth, and the full API layer connecting AI inference to the frontend.",
-    flow: "Client → React UI → FastAPI Backend → MongoDB → AI Inference Layer → SSE Stream → Client",
     tech: ["Python", "FastAPI", "React", "Docker", "MongoDB", "GCP", "LangGraph"],
     github: "https://github.com/keval-som/AdvisorAi",
     demo: null,
   },
   {
+    slug: "ride-share",
     title: "Ride Share",
+    featured: false,
+    tagline: "Geospatial matching in real time",
     desc: "Full-stack ride-sharing platform built with Node.js — real-time driver-rider chat, booking workflows, geospatial ride-matching with optimized MongoDB indexing (30% search performance improvement), email notifications, and a post-ride review system. Containerized with Docker.",
-    flow: "User Location → Geo-Index → Distance Scoring → Driver Match → Booking → Real-time Sync",
     tech: ["Node.js", "MongoDB", "Docker"],
     github: "https://github.com/keval-som/Ride-Share",
     demo: null,

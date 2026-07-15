@@ -8,8 +8,6 @@ export default function Experience() {
   return (
     <Section
       id="experience"
-      number="02"
-      label="Where I've Worked"
       title="Experience building production systems."
       tagline="Shipping real infrastructure — not just code on GitHub."
     >
@@ -35,14 +33,18 @@ export default function Experience() {
                 <h3 className="text-lg md:text-xl font-semibold text-[color:var(--fg-strong)]">
                   {exp.title}
                   <span className="text-[color:var(--muted)]"> · </span>
-                  <a
-                    href={exp.companyUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[color:var(--accent)] underline-anim"
-                  >
-                    {exp.company}
-                  </a>
+                  {exp.companyUrl && exp.companyUrl !== "#" ? (
+                    <a
+                      href={exp.companyUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[color:var(--accent)] underline-anim"
+                    >
+                      {exp.company}
+                    </a>
+                  ) : (
+                    <span className="text-[color:var(--accent)]">{exp.company}</span>
+                  )}
                 </h3>
                 {exp.live && (
                   <span className="mono inline-flex items-center gap-1.5 text-[10.5px] text-[color:var(--success)] bg-[color:var(--success)]/10 border border-[color:var(--success)]/25 px-2 py-0.5 rounded-full uppercase tracking-wider">

@@ -74,8 +74,6 @@ export default function Skills() {
   return (
     <Section
       id="skills"
-      number="04"
-      label="Toolkit"
       title="Skills & current activity."
       tagline="Categorized by layer. Highlighted tags are the tools I reach for most often."
     >
