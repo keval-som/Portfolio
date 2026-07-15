@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { navItems, profile } from "@/lib/data";
 import ThemeToggle from "./ThemeToggle";
 import { IconClose, IconDownload, IconMenu } from "./Icons";
@@ -10,15 +9,33 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("");
+  const progressRef = useRef(null);
 
-  const { scrollYProgress } = useScroll();
-  const progressX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.2 });
-
+  // Scrolled state + progress bar (rAF-throttled, no animation library)
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      setScrolled(window.scrollY > 24);
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - doc.clientHeight || 1;
+      if (progressRef.current) {
+        progressRef.current.style.transform = `scaleX(${Math.min(doc.scrollTop / max, 1)})`;
+      }
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   // Active section spy
@@ -51,15 +68,13 @@ export default function Navbar() {
 
   return (
     <>
-      <motion.header
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+      <header
+        className={`rise fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
           scrolled
             ? "backdrop-blur-xl bg-[color:var(--bg)]/70 border-b border-[color:var(--border)]"
             : "bg-transparent"
         }`}
+        style={{ "--d": "0.05s" }}
       >
         <nav
           aria-label="Primary"
@@ -81,19 +96,12 @@ export default function Navbar() {
                     href={item.href}
                     className={`relative px-3 py-2 mono text-[12.5px] rounded-md transition-colors ${
                       isActive
-                        ? "text-[color:var(--accent)]"
+                        ? "text-[color:var(--accent)] bg-[color:rgba(var(--accent-rgb),0.08)]"
                         : "text-[color:var(--muted)] hover:text-[color:var(--fg)]"
                     }`}
                   >
                     <span className="opacity-50">/</span>
                     {item.label}
-                    {isActive && (
-                      <motion.span
-                        layoutId="nav-active"
-                        className="absolute inset-0 rounded-md bg-[color:rgba(var(--accent-rgb),0.08)] -z-10"
-                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                      />
-                    )}
                   </a>
                 </li>
               );
@@ -124,56 +132,48 @@ export default function Navbar() {
         </nav>
 
         {/* Scroll progress bar */}
-        <motion.div
-          style={{ scaleX: progressX }}
-          className="absolute bottom-0 left-0 right-0 h-[2px] origin-left bg-gradient-to-r from-[color:var(--accent)] via-[color:var(--accent-2)] to-[color:var(--accent-3)]"
+        <div
+          ref={progressRef}
+          style={{ transform: "scaleX(0)" }}
+          className="absolute bottom-0 left-0 right-0 h-[2px] origin-left bg-gradient-to-r from-[color:var(--accent)] via-[color:var(--accent-2)] to-[color:var(--accent)]"
         />
-      </motion.header>
+      </header>
 
       {/* Mobile menu */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 md:hidden bg-[color:var(--bg)]/95 backdrop-blur-xl pt-20 px-6"
-          >
-            <ul className="flex flex-col gap-2">
-              {navItems.map((item, i) => (
-                <motion.li
-                  key={item.href}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 + 0.1 }}
-                >
-                  <a
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    className="flex items-baseline px-4 py-5 border-b border-[color:var(--border)] mono text-lg hover:text-[color:var(--accent)]"
-                  >
-                    <span className="text-[color:var(--accent)] opacity-70">/</span>
-                    <span>{item.label}</span>
-                  </a>
-                </motion.li>
-              ))}
-            </ul>
-            <div className="mt-8">
-              <a
-                href={profile.resumeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-primary w-full"
-                onClick={() => setOpen(false)}
+      {open && (
+        <div className="menu-in fixed inset-0 z-40 md:hidden bg-[color:var(--bg)]/95 backdrop-blur-xl pt-20 px-6">
+          <ul className="flex flex-col gap-2">
+            {navItems.map((item, i) => (
+              <li
+                key={item.href}
+                className="rise"
+                style={{ "--d": `${i * 0.05 + 0.1}s` }}
               >
-                <IconDownload width={16} height={16} />
-                Download Resume
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                <a
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="flex items-baseline px-4 py-5 border-b border-[color:var(--border)] mono text-lg hover:text-[color:var(--accent)]"
+                >
+                  <span className="text-[color:var(--accent)] opacity-70">/</span>
+                  <span>{item.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-8">
+            <a
+              href={profile.resumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary w-full"
+              onClick={() => setOpen(false)}
+            >
+              <IconDownload width={16} height={16} />
+              Download Resume
+            </a>
+          </div>
+        </div>
+      )}
     </>
   );
 }

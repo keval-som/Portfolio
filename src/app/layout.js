@@ -11,17 +11,19 @@ const archivo = Archivo({
   display: "swap",
 });
 
+// Body face carries the LCP text — "optional" keeps a late font arrival from
+// re-triggering the LCP paint on slow connections (falls back to system sans).
 const plexSans = IBM_Plex_Sans({
   variable: "--font-sans-var",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
+  weight: ["400", "600"],
+  display: "optional",
 });
 
 const plexMono = IBM_Plex_Mono({
   variable: "--font-mono-var",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500"],
   display: "swap",
 });
 

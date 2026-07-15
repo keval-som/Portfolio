@@ -1,5 +1,3 @@
-"use client";
-
 import Section from "@/components/Section";
 import Reveal from "@/components/Reveal";
 import { skillGroups, activity } from "@/lib/data";
@@ -54,9 +52,9 @@ function SkillCard({ group, delay }) {
         <span className="inline-flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-lg bg-[color:rgba(var(--accent-rgb),0.12)] text-[color:var(--accent)] shrink-0">
           <Icon width={15} height={15} />
         </span>
-        <h4 className="mono text-[10.5px] md:text-[11px] text-[color:var(--muted)] uppercase tracking-[0.15em] md:tracking-[0.18em] truncate">
+        <h3 className="mono text-[10.5px] md:text-[11px] text-[color:var(--muted)] uppercase tracking-[0.15em] md:tracking-[0.18em] truncate">
           {group.title}
-        </h4>
+        </h3>
         <span className="mono text-[10px] text-[color:var(--muted-2)] ml-auto shrink-0">
           {group.items.length}
         </span>

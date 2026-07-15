@@ -1,16 +1,10 @@
-"use client";
-
 import Section from "@/components/Section";
 import Reveal from "@/components/Reveal";
 import { experiences } from "@/lib/data";
 
 export default function Experience() {
   return (
-    <Section
-      id="experience"
-      title="Experience building production systems."
-      tagline="Shipping real infrastructure — not just code on GitHub."
-    >
+    <Section id="experience" title="Experience building production systems.">
       <ol className="relative ml-3 md:ml-4 pl-6 md:pl-8 border-l border-[color:var(--border)] space-y-12">
         {experiences.map((exp, idx) => (
           <Reveal key={`${exp.company}-${exp.period}`} delay={idx * 0.08} as="li" className="relative">
