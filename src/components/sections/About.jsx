@@ -1,5 +1,3 @@
-"use client";
-
 import Section from "@/components/Section";
 import Reveal from "@/components/Reveal";
 import { aboutParagraphs } from "@/lib/data";

@@ -1,5 +1,3 @@
-"use client";
-
 import Section from "@/components/Section";
 import Reveal from "@/components/Reveal";
 import { projects } from "@/lib/data";
@@ -8,18 +6,7 @@ import { IconArrowUpRight, IconGitHub } from "@/components/Icons";
 
 function CardLinks({ p, className = "" }) {
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      {p.github && (
-        <a
-          href={p.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn btn-ghost h-9 px-3.5 text-[12.5px]"
-        >
-          <IconGitHub width={15} height={15} />
-          Source
-        </a>
-      )}
+    <div className={`flex items-center flex-wrap gap-2 ${className}`}>
       {p.demo && (
         <a
           href={p.demo}
@@ -31,6 +18,29 @@ function CardLinks({ p, className = "" }) {
           <IconArrowUpRight width={14} height={14} />
         </a>
       )}
+      {p.github && (
+        <a
+          href={p.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-ghost h-9 px-3.5 text-[12.5px]"
+        >
+          <IconGitHub width={15} height={15} />
+          Source
+        </a>
+      )}
+      {(p.links || []).map((l) => (
+        <a
+          key={l.href}
+          href={l.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-ghost h-9 px-3.5 text-[12.5px]"
+        >
+          {l.label}
+          <IconArrowUpRight width={14} height={14} />
+        </a>
+      ))}
     </div>
   );
 }

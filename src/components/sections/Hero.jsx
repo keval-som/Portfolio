@@ -1,12 +1,11 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { profile, highlights } from "@/lib/data";
 import { IconArrowRight, IconDownload } from "@/components/Icons";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Distributed trace of a loan application — Keval's actual production domain.
 // Spans are illustrative but shaped like the real pipeline he shipped at Lentra.
+// Entrance animation is pure CSS (.rise / .trace-*) so the hero text paints
+// before hydration — framer-motion here cost ~2.5s of mobile LCP.
 // ─────────────────────────────────────────────────────────────────────────────
 const TRACE_TOTAL_MS = 60;
 const TRACE_SPANS = [
@@ -41,14 +40,12 @@ function TracePanel() {
         <span className="mono text-[12px] text-[color:var(--fg-strong)]">
           POST /api/v2/applications
         </span>
-        <motion.span
-          initial={{ opacity: 0, scale: 0.7 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: STATUS_DELAY, type: "spring", stiffness: 300, damping: 18 }}
-          className="mono ml-auto text-[10.5px] px-2 py-0.5 rounded-full border border-[color:rgba(var(--success-rgb),0.35)] bg-[color:rgba(var(--success-rgb),0.1)] text-[color:var(--success)]"
+        <span
+          className="trace-pop mono ml-auto text-[10.5px] px-2 py-0.5 rounded-full border border-[color:rgba(var(--success-rgb),0.35)] bg-[color:rgba(var(--success-rgb),0.1)] text-[color:var(--success)]"
+          style={{ "--d": `${STATUS_DELAY}s` }}
         >
           201 Created
-        </motion.span>
+        </span>
       </div>
 
       {/* spans */}
@@ -65,30 +62,23 @@ function TracePanel() {
                   "repeating-linear-gradient(to right, var(--border) 0 1px, transparent 1px 25%)",
               }}
             >
-              <motion.div
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{
-                  delay: spanDelay(s.start),
-                  duration: spanDuration(s.ms),
-                  ease: "linear",
-                }}
-                className="absolute top-0 h-full rounded-sm origin-left bg-[color:var(--accent)]"
+              <div
+                className="trace-bar absolute top-0 h-full rounded-sm bg-[color:var(--accent)]"
                 style={{
                   left: `${(s.start / TRACE_TOTAL_MS) * 100}%`,
                   width: `${(s.ms / TRACE_TOTAL_MS) * 100}%`,
                   opacity: 0.9,
+                  "--d": `${spanDelay(s.start)}s`,
+                  "--dur": `${spanDuration(s.ms)}s`,
                 }}
               />
             </div>
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: spanDelay(s.start) + spanDuration(s.ms) }}
-              className="mono text-[10px] text-[color:var(--muted-2)] w-9 text-right shrink-0"
+            <span
+              className="trace-in mono text-[10px] text-[color:var(--muted-2)] w-9 text-right shrink-0"
+              style={{ "--d": `${spanDelay(s.start) + spanDuration(s.ms)}s` }}
             >
               {s.ms}ms
-            </motion.span>
+            </span>
           </div>
         ))}
 
@@ -98,30 +88,24 @@ function TracePanel() {
             callback-queue
           </span>
           <div className="relative flex-1 h-2 flex items-center">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: spanDelay(46) + 0.2 }}
-              className="absolute left-[76.6%] right-0 border-t border-dashed border-[color:rgba(var(--accent-2-rgb),0.7)]"
+            <div
+              className="trace-in absolute left-[76.6%] right-0 border-t border-dashed border-[color:rgba(var(--accent-2-rgb),0.7)]"
+              style={{ "--d": `${spanDelay(46) + 0.2}s` }}
             />
           </div>
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: spanDelay(46) + 0.3 }}
-            className="mono text-[10px] text-[color:var(--accent-2)] w-9 text-right shrink-0"
+          <span
+            className="trace-in mono text-[10px] text-[color:var(--accent-2)] w-9 text-right shrink-0"
+            style={{ "--d": `${spanDelay(46) + 0.3}s` }}
           >
             async
-          </motion.span>
+          </span>
         </div>
       </div>
 
       {/* footer */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: STATUS_DELAY + 0.3, duration: 0.5 }}
-        className="mt-5 pt-3.5 border-t border-[color:var(--border)] flex items-center justify-between mono text-[10px] text-[color:var(--muted-2)]"
+      <div
+        className="trace-in mt-5 pt-3.5 border-t border-[color:var(--border)] flex items-center justify-between mono text-[10px] text-[color:var(--muted-2)]"
+        style={{ "--d": `${STATUS_DELAY + 0.3}s` }}
       >
         <span>total 57ms</span>
         <span>retries 0</span>
@@ -129,7 +113,7 @@ function TracePanel() {
           p99 <span className="text-[color:var(--success)]">✓</span>
         </span>
         <span className="cursor-blink" aria-hidden="true" />
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -144,52 +128,32 @@ export default function Hero() {
         <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-10 items-center">
           {/* ── Left: identity ── */}
           <div>
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="mono text-[13px] text-[color:var(--accent)] mb-6 inline-flex items-center gap-2"
+            <p
+              className="rise mono text-[13px] text-[color:var(--accent)] mb-6 inline-flex items-center gap-2"
+              style={{ "--d": "0.1s" }}
             >
               <span className="dot-live" aria-hidden="true" />
               Available for software engineering roles
-            </motion.p>
+            </p>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.18 }}
-              className="display uppercase text-[clamp(2.3rem,5.5vw,3.9rem)] font-extrabold leading-[0.98] text-[color:var(--fg-strong)]"
-            >
+            {/* Headline block stays statically visible — it's the LCP element;
+                fading it in from opacity 0 pushed mobile LCP past 4s. */}
+            <h1 className="display uppercase text-[clamp(2.3rem,5.5vw,3.9rem)] font-extrabold leading-[0.98] text-[color:var(--fg-strong)]">
               Keval
               <br />
               Sompura
-            </motion.h1>
+            </h1>
 
-            <motion.h2
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.28 }}
-              className="mt-5 text-[clamp(1.15rem,2.4vw,1.55rem)] font-semibold tracking-[-0.01em] leading-[1.3] text-[color:var(--fg)] max-w-xl"
-            >
+            <h2 className="mt-5 text-[clamp(1.15rem,2.4vw,1.55rem)] font-semibold tracking-[-0.01em] leading-[1.3] text-[color:var(--fg)] max-w-xl">
               I build backend systems that{" "}
               <span className="text-[color:var(--accent)]">don&apos;t break under pressure</span>.
-            </motion.h2>
+            </h2>
 
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="mt-4 max-w-xl text-[color:var(--muted)] leading-relaxed text-[15px]"
-            >
+            <p className="mt-4 max-w-xl text-[color:var(--muted)] leading-relaxed text-[15px]">
               {profile.subheadline}
-            </motion.p>
+            </p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.55 }}
-              className="mt-9 flex flex-wrap gap-3"
-            >
+            <div className="rise mt-9 flex flex-wrap gap-3" style={{ "--d": "0.55s" }}>
               <a href="#projects" className="btn btn-primary">
                 View Projects
                 <IconArrowRight width={16} height={16} />
@@ -206,25 +170,19 @@ export default function Hero() {
                 <IconDownload width={15} height={15} />
                 Resume
               </a>
-            </motion.div>
+            </div>
           </div>
 
           {/* ── Right: live trace ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          >
+          <div className="rise" style={{ "--d": "0.5s" }}>
             <TracePanel />
-          </motion.div>
+          </div>
         </div>
 
         {/* ── Readout strip ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.85 }}
-          className="mt-14 md:mt-16 rounded-xl border border-[color:var(--border)] bg-[color:var(--border)] overflow-hidden grid grid-cols-2 md:grid-cols-4 gap-px"
+        <div
+          className="rise mt-14 md:mt-16 rounded-xl border border-[color:var(--border)] bg-[color:var(--border)] overflow-hidden grid grid-cols-2 md:grid-cols-4 gap-px"
+          style={{ "--d": "0.85s" }}
         >
           {highlights.map((h) => (
             <div key={h.label} className="bg-[color:var(--bg-elev)] px-4 py-4 md:py-5">
@@ -236,7 +194,7 @@ export default function Hero() {
               </div>
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

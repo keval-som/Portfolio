@@ -83,6 +83,12 @@ export const projects = [
     tech: ["Java 21", "Netty", "PostgreSQL", "Redis", "RabbitMQ", "Docker"],
     github: "https://github.com/keval-som/Shadow-Proxy",
     demo: null,
+    links: [
+      {
+        label: "Design decisions",
+        href: "https://github.com/keval-som/Shadow-Proxy#design-decisions",
+      },
+    ],
   },
   {
     slug: "advisor-ai",
@@ -92,16 +98,23 @@ export const projects = [
     desc: "Full-stack academic advising platform — React frontend, FastAPI backend, MongoDB, deployed to Google Cloud Run via Docker. Integrated a LangGraph-based RAG pipeline and fine-tuned LLaMA-2-7B model for AI-assisted advising. Built real-time SSE streaming, Firebase Auth, and the full API layer connecting AI inference to the frontend.",
     tech: ["Python", "FastAPI", "React", "Docker", "MongoDB", "GCP", "LangGraph"],
     github: "https://github.com/keval-som/AdvisorAi",
-    demo: null,
+    demo: "https://advisoraii.web.app",
+    links: [
+      {
+        label: "Research paper",
+        href: "https://github.com/keval-som/AdvisorAi/blob/main/AdvisorAI_Research_Paper.pdf",
+      },
+    ],
   },
   {
-    slug: "ride-share",
-    title: "Ride Share",
+    slug: "plasmiq",
+    title: "PlasmIQ",
     featured: false,
-    tagline: "Geospatial matching in real time",
-    desc: "Full-stack ride-sharing platform built with Node.js — real-time driver-rider chat, booking workflows, geospatial ride-matching with optimized MongoDB indexing (30% search performance improvement), email notifications, and a post-ride review system. Containerized with Docker.",
-    tech: ["Node.js", "MongoDB", "Docker"],
-    github: "https://github.com/keval-som/Ride-Share",
+    tagline: "Hackathon build · Real-world data · AI concierge",
+    desc: "A plasma-donation platform that ranks donation slots by a live Friction Score computed from travel time, weather forecasts, and real-time center wait times — so donors see the lowest-friction slot, not just the nearest center. A GPT-4o concierge with function calling handles questions and rescheduling, with every response passed through a safety screening layer before delivery. Built with a team of three at the CSL hackathon.",
+    // Tech tags sourced from the PlasmIQ README's stack section.
+    tech: ["Python", "FastAPI", "React", "MongoDB", "GPT-4o", "Tailwind CSS"],
+    github: "https://github.com/keval-som/PlasmIQ",
     demo: null,
   },
 ];

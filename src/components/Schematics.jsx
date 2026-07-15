@@ -132,50 +132,53 @@ export function AdvisorAiSchematic() {
   );
 }
 
-/* ── Ride Share — geo points, matcher, city-block route ── */
-export function RideShareSchematic() {
+/* ── PlasmIQ — data feeds → smart-suggest → booking, plus concierge safety path ── */
+export function PlasmIqSchematic() {
   return (
     <svg
-      viewBox="0 0 420 220"
+      viewBox="0 0 420 240"
       className="w-full h-full"
       role="img"
-      aria-label="Ride Share architecture: rider and driver locations feed a geospatial matcher backed by a MongoDB 2dsphere index, which computes a matched route between them"
+      aria-label="PlasmIQ architecture: travel time, weather and live wait-time feeds flow into a smart-suggest engine that ranks donation slots by friction score and books them; in parallel, concierge chat goes through GPT-4o with function calling and an inhibitor API safety screen before responding"
     >
-      {/* rider */}
-      <circle cx={78} cy={64} r={14} className="ping" fill="none" stroke="var(--accent)" strokeWidth="1" />
-      <circle cx={78} cy={64} r={5} fill="var(--accent)" />
-      <text x={78} y={44} textAnchor="middle" className="schem-sub">
-        rider
+      {/* inbound data feeds */}
+      <Box x={14} y={8} w={80} h={22} title="travel time" />
+      <Box x={14} y={38} w={80} h={22} title="weather" />
+      <Box x={14} y={68} w={80} h={22} title="wait times" />
+
+      {/* donor */}
+      <Box x={14} y={104} w={70} h={34} title="donor" />
+
+      {/* smart-suggest engine */}
+      <Box x={140} y={52} w={110} h={46} title="smart-suggest" sub="ranks by friction" accent />
+
+      {/* slot booking */}
+      <Box x={310} y={56} w={96} h={38} title="slot booking" />
+      <Led x={398} y={64} />
+
+      {/* feed wires */}
+      <Wire d="M94,19 C120,20 128,50 140,58" dur={3} delay={-0.2} />
+      <Wire d="M94,49 C118,50 126,62 140,68" dur={3} delay={-1.1} />
+      <Wire d="M94,79 C118,80 128,80 140,80" dur={3} delay={-2} />
+      {/* donor → engine */}
+      <Wire d="M84,118 C112,116 124,100 140,92" dur={2.6} />
+      {/* engine → booking, carrying the score */}
+      <Wire d="M250,75 L310,75" dur={2.4} delay={-0.8} />
+      <text x={256} y={68} className="schem-tag">
+        friction score
       </text>
 
-      {/* driver */}
-      <circle
-        cx={330}
-        cy={150}
-        r={14}
-        className="ping"
-        fill="none"
-        stroke="var(--accent-2)"
-        strokeWidth="1"
-        style={{ animationDelay: "1.2s" }}
-      />
-      <circle cx={330} cy={150} r={5} fill="var(--accent-2)" />
-      <text x={330} y={178} textAnchor="middle" className="schem-sub">
-        driver
-      </text>
+      {/* concierge path */}
+      <Box x={14} y={178} w={92} h={36} title="concierge chat" />
+      <Box x={146} y={178} w={96} h={36} title="gpt-4o" sub="function calling" />
+      <Box x={282} y={178} w={92} h={36} title="inhibitor api" sub="safety screen" accent />
 
-      {/* matcher */}
-      <Box x={155} y={88} w={110} h={44} title="geo-matcher" sub="2dsphere index" accent />
-      <Led x={257} y={96} />
-
-      {/* location pings into the matcher */}
-      <Wire d="M83,69 C112,92 130,100 155,106" dur={2.6} />
-      <Wire d="M325,145 C300,133 290,122 265,114" dur={2.6} delay={-1.3} />
-
-      {/* matched route — city blocks */}
-      <Wire d="M83,69 L83,150 L200,150 L200,196 L330,196 L330,150" dur={4.5} delay={-2} dashed cool />
-      <text x={210} y={212} textAnchor="middle" className="schem-tag">
-        matched route · 30% faster lookup
+      <Wire d="M106,196 L146,196" dur={2.4} delay={-0.3} />
+      <Wire d="M242,196 L282,196" dur={2.4} delay={-1.4} />
+      {/* screened response back to chat */}
+      <Wire d="M282,208 C230,232 160,232 106,208" dur={2} delay={-1} dashed cool />
+      <text x={172} y={236} className="schem-tag">
+        screened response
       </text>
     </svg>
   );
@@ -184,5 +187,5 @@ export function RideShareSchematic() {
 export const SCHEMATICS = {
   "shadow-proxy": ShadowProxySchematic,
   "advisor-ai": AdvisorAiSchematic,
-  "ride-share": RideShareSchematic,
+  plasmiq: PlasmIqSchematic,
 };
