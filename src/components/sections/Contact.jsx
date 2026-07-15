@@ -28,8 +28,6 @@ export default function Contact() {
   return (
     <Section
       id="contact"
-      number="05"
-      label="Get in Touch"
       title="Open to the right opportunity."
       tagline="I'm actively interviewing for backend, full-stack, and product engineering roles. If you're building something that needs to work under real load, I'd like to hear about it."
       maxWidth="max-w-5xl"

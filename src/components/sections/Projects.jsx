@@ -3,112 +3,126 @@
 import Section from "@/components/Section";
 import Reveal from "@/components/Reveal";
 import { projects } from "@/lib/data";
-import {
-  IconArrowUpRight,
-  IconFolder,
-  IconGitHub,
-} from "@/components/Icons";
+import { SCHEMATICS } from "@/components/Schematics";
+import { IconArrowUpRight, IconGitHub } from "@/components/Icons";
+
+function CardLinks({ p, className = "" }) {
+  return (
+    <div className={`flex items-center gap-2 ${className}`}>
+      {p.github && (
+        <a
+          href={p.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-ghost h-9 px-3.5 text-[12.5px]"
+        >
+          <IconGitHub width={15} height={15} />
+          Source
+        </a>
+      )}
+      {p.demo && (
+        <a
+          href={p.demo}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-secondary h-9 px-3.5 text-[12.5px]"
+        >
+          Live demo
+          <IconArrowUpRight width={14} height={14} />
+        </a>
+      )}
+    </div>
+  );
+}
+
+function TechPills({ tech }) {
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {tech.map((t) => (
+        <span key={t} className="pill">
+          {t}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function FeaturedCard({ p }) {
+  const Schematic = SCHEMATICS[p.slug];
+  return (
+    <Reveal as="article" className="panel panel-hover group overflow-hidden">
+      <div className="grid lg:grid-cols-[0.95fr_1.05fr]">
+        {/* Copy */}
+        <div className="p-6 md:p-8 flex flex-col">
+          <p className="mono text-[10.5px] uppercase tracking-[0.2em] text-[color:var(--accent)] mb-3">
+            Featured build · {p.tagline}
+          </p>
+          <h3 className="display text-2xl md:text-[1.7rem] font-bold text-[color:var(--fg-strong)]">
+            {p.title}
+          </h3>
+          <p className="mt-3.5 text-[14px] text-[color:var(--muted)] leading-relaxed flex-1">
+            {p.desc}
+          </p>
+          <div className="mt-5">
+            <TechPills tech={p.tech} />
+          </div>
+          <CardLinks p={p} className="mt-6" />
+        </div>
+
+        {/* Live schematic — pans horizontally on small screens so labels stay legible */}
+        <div className="schem border-t lg:border-t-0 lg:border-l border-[color:var(--border)] p-4 md:p-6 flex items-center min-h-[240px] md:min-h-[280px] overflow-x-auto">
+          <div className="min-w-[480px] w-full lg:min-w-0 h-full flex items-center">
+            {Schematic && <Schematic />}
+          </div>
+        </div>
+      </div>
+    </Reveal>
+  );
+}
+
+function ProjectCard({ p, delay }) {
+  const Schematic = SCHEMATICS[p.slug];
+  return (
+    <Reveal as="article" delay={delay} className="panel panel-hover group overflow-hidden flex flex-col">
+      {/* Live schematic thumbnail */}
+      <div className="schem border-b border-[color:var(--border)] p-4 h-48 md:h-52 shrink-0">
+        {Schematic && <Schematic />}
+      </div>
+
+      <div className="p-6 flex flex-col flex-1">
+        <p className="mono text-[10px] uppercase tracking-[0.18em] text-[color:var(--accent)] mb-2">
+          {p.tagline}
+        </p>
+        <h3 className="display text-xl font-bold text-[color:var(--fg-strong)]">{p.title}</h3>
+        <p className="mt-3 text-[13.5px] text-[color:var(--muted)] leading-relaxed flex-1">
+          {p.desc}
+        </p>
+        <div className="mt-4">
+          <TechPills tech={p.tech} />
+        </div>
+        <CardLinks p={p} className="mt-5" />
+      </div>
+    </Reveal>
+  );
+}
 
 export default function Projects() {
+  const featured = projects.find((p) => p.featured);
+  const rest = projects.filter((p) => !p.featured);
+
   return (
     <Section
       id="projects"
-      number="03"
-      label="Things I've Built"
-      title="Selected projects."
-      tagline="Hover a card to peek inside the architecture."
+      title="Things I've built."
+      tagline="Every card is the system's real architecture, live — packets included."
     >
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {projects.map((p, idx) => (
-          <Reveal
-            key={p.title}
-            delay={idx * 0.06}
-            as="article"
-            className={`panel panel-hover group relative overflow-hidden ${
-              p.featured ? "lg:col-span-2" : ""
-            }`}
-          >
-            <div className="p-6 relative z-10 h-full flex flex-col">
-              {/* Top row */}
-              <div className="flex items-start justify-between mb-5">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[color:rgba(var(--accent-rgb),0.1)] text-[color:var(--accent)]">
-                  <IconFolder width={20} height={20} />
-                </span>
-                <div className="flex items-center gap-1">
-                  {p.github && (
-                    <a
-                      href={p.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${p.title} source on GitHub`}
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-[color:var(--muted)] hover:text-[color:var(--accent)] hover:bg-[color:rgba(var(--accent-rgb),0.08)] transition-colors"
-                    >
-                      <IconGitHub width={17} height={17} />
-                    </a>
-                  )}
-                  {p.demo && (
-                    <a
-                      href={p.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${p.title} live demo`}
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-[color:var(--muted)] hover:text-[color:var(--accent)] hover:bg-[color:rgba(var(--accent-rgb),0.08)] transition-colors"
-                    >
-                      <IconArrowUpRight width={17} height={17} />
-                    </a>
-                  )}
-                </div>
-              </div>
-
-              <h3 className="text-lg font-semibold text-[color:var(--fg-strong)] group-hover:text-[color:var(--accent)] transition-colors">
-                {p.title}
-                {p.featured && (
-                  <span className="ml-2 mono text-[10px] px-2 py-0.5 rounded-full border border-[color:var(--accent)]/40 text-[color:var(--accent)] align-middle">
-                    FEATURED
-                  </span>
-                )}
-              </h3>
-
-              <p className="mt-3 text-[13.5px] text-[color:var(--muted)] leading-relaxed flex-1">
-                {p.desc}
-              </p>
-
-              {/* Flow accordion — always visible on mobile, hover-reveal on desktop */}
-              <div className="mt-4 overflow-hidden">
-                <div className="max-h-60 md:max-h-0 md:group-hover:max-h-60 md:group-focus-within:max-h-60 transition-[max-height] duration-500 ease-out">
-                  <div className="pt-3 border-t border-[color:var(--border)] mono text-[11px] text-[color:var(--muted-2)] leading-5">
-                    <div className="text-[color:var(--accent)] text-[10px] uppercase tracking-widest mb-1.5">
-                      ▸ System Flow
-                    </div>
-                    <div className="flex flex-wrap gap-x-1 gap-y-1">
-                      {p.flow.split(" → ").map((step, i, arr) => (
-                        <span key={i} className="whitespace-nowrap">
-                          <span className="text-[color:var(--fg)]">{step}</span>
-                          {i < arr.length - 1 && (
-                            <span className="text-[color:var(--accent)] mx-1">→</span>
-                          )}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-5 flex flex-wrap gap-1.5">
-                {p.tech.map((t) => (
-                  <span key={t} className="pill">
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Decorative gradient on hover */}
-            <div className="absolute -inset-px rounded-[14px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-              <div className="absolute inset-0 rounded-[14px] bg-gradient-to-br from-[color:rgba(var(--accent-rgb),0.08)] via-transparent to-transparent" />
-            </div>
-          </Reveal>
-        ))}
+      <div className="space-y-6">
+        {featured && <FeaturedCard p={featured} />}
+        <div className="grid md:grid-cols-2 gap-6">
+          {rest.map((p, i) => (
+            <ProjectCard key={p.slug} p={p} delay={i * 0.08} />
+          ))}
+        </div>
       </div>
     </Section>
   );

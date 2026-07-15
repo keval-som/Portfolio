@@ -8,10 +8,10 @@ const STORAGE_KEY = "portfolio-theme";
 
 export function ThemeProvider({ children }) {
   // Initial value is resolved by the inline <script> in layout to prevent FOUC.
-  const [theme, setThemeState] = useState("light");
+  const [theme, setThemeState] = useState("dark");
 
   useEffect(() => {
-    const initial = document.documentElement.getAttribute("data-theme") || "light";
+    const initial = document.documentElement.getAttribute("data-theme") || "dark";
     setThemeState(initial);
   }, []);
 
@@ -47,7 +47,7 @@ export function useTheme() {
 export const THEME_INIT_SCRIPT = `
 (function(){try{
   var s=localStorage.getItem('${STORAGE_KEY}');
-  var t=s||'light';
+  var t=s||(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
   document.documentElement.setAttribute('data-theme',t);
-}catch(e){document.documentElement.setAttribute('data-theme','light');}})();
+}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();
 `;
